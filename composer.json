@@ -1,0 +1,19 @@
+{
+    "name": "pagekit/contract",
+    "type": "pagekit-extension",
+    "version": "0.0.1",
+    "title": "Contracts",
+    "description": "Contracts extension for pagekit.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pagekit",
+            "email": "djavid.rustamov@googlemail.com",
+            "homepage": "https://github.com/dataclub/pagekit-contract"
+        }
+    ],
+    "extra": {
+        "icon": "contract.svg",
+        "scripts": "scripts.php"
+    }
+}
