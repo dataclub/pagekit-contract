@@ -21,7 +21,7 @@ class ContractApiController
         $query  = Contract::query();
         $filter = array_merge(array_fill_keys(['status', 'search', 'role', 'order', 'access'], ''), $filter);
         extract($filter, EXTR_SKIP);
-
+/*
         if (is_numeric($status)) {
 
             $query->where(['status' => (int) $status]);
@@ -42,9 +42,16 @@ class ContractApiController
             $query->where('access > ?', [date('Y-m-d H:i:s', time() - max(0, (int) $access))]);
         }
 
-        if (!preg_match('/^(date|name|place|startDate|cancellationDate)\s(asc|desc)$/i', $order, $order)) {
+        if (!preg_match('/^(date|name|place|startDate|cancellationDate)\s(asc|desc)$/i', $order, $match)) {
             $order = [1 => 'date', 2 => 'asc'];
         }
+*/
+        if (preg_match('/^(date|name|place|startDate|cancellationDate)\s(asc|desc)$/i', $order, $match)) {
+            $order = $match;
+        } else {
+            $order = [1=>'date', 2=>'asc'];
+        }
+
 
         $default = App::module('contract')->config('contracts_per_page');
         $limit   = min(max(0, $limit), $default) ?: $default;

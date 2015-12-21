@@ -1,5 +1,7 @@
 module.exports = {
 
+    el: '#contracts',
+
     data: function () {
         return _.merge({
             contracts: false,
@@ -12,7 +14,7 @@ module.exports = {
     created: function () {
 
         this.resource = this.$resource('api/contract/:id');
-        this.config.filter = _.extend({search: '', status: '', role: '', order: 'name asc'}, this.config.filter);
+        this.config.filter = _.extend({order: 'name asc'}, this.config.filter);
 
     },
 
@@ -33,7 +35,7 @@ module.exports = {
 
         statuses: function () {
 
-            var options = [{text: this.$trans('New'), value: 'new'}].concat(_.map(this.$data.statuses, function (status, id) {
+            var options = [{text: this.$trans('New'), value: 'new'}].concat(_.map(this.config.statuses, function (status, id) {
                 return {text: status, value: id};
             }));
 
@@ -42,7 +44,7 @@ module.exports = {
 
         roles: function () {
 
-            var options = this.$data.roles.map(function (role) {
+            var options = this.config.roles.map(function (role) {
                 return {text: role.name, value: role.id};
             });
 
@@ -58,9 +60,12 @@ module.exports = {
         },
 
         save: function (contract) {
-            this.resource.save({id: contract.id}, {contract: contract}, function (data) {
+            this.resource.save({id: contract.id}, {contract: contract}).then(function () {
                 this.load();
                 this.$notify('Contract saved.');
+            }, function (res) {
+                this.load();
+                this.$notify(res.data, 'danger');
             });
         },
 
@@ -72,16 +77,22 @@ module.exports = {
                 contract.status = status;
             });
 
-            this.resource.save({id: 'bulk'}, {contracts: contracts}, function (data) {
+            this.resource.save({id: 'bulk'}, {contracts: contracts}).then(function () {
                 this.load();
                 this.$notify('Contracts saved.');
+            }, function (res) {
+                this.load();
+                this.$notify(res.data, 'danger');
             });
         },
 
         remove: function () {
-            this.resource.delete({id: 'bulk'}, {ids: this.selected}, function (data) {
+            this.resource.delete({id: 'bulk'}, {ids: this.selected}).then(function () {
                 this.load();
                 this.$notify('Contracts deleted.');
+            }, function (res) {
+                this.load();
+                this.$notify(res.data, 'danger');
             });
         },
 
@@ -94,33 +105,30 @@ module.exports = {
             return this.config.emailVerification && contract.data.verified;
         },
 
-        showVersion: function (contract) {
-            /*
-            return _.reduce(contract.versions, function (versions, id) {
-                var role = _.find(this.$data.roles, 'id', id);
+        showRoles: function (contract) {
+            return _.reduce(contract.roles, function (roles, id) {
+                var role = _.find(this.config.roles, 'id', id);
                 if (id !== 2 && role) {
                     roles.push(role.name);
                 }
                 return roles;
             }, [], this).join(', ');
-            */
-            return "testVersion";
-        },
-
-        showVersion: function (contract) {
-          return "testStatus";
         },
 
         load: function (page) {
 
             page = page !== undefined ? page : this.config.page;
 
-            this.resource.query({filter: this.config.filter, page: page}, function (data) {
+            this.resource.query({filter: this.config.filter, page: page}).then( function (res) {
+                var data = res.data;
+
                 this.$set('contracts', data.contracts);
                 this.$set('pages', data.pages);
                 this.$set('count', data.count);
                 this.$set('config.page', page);
                 this.$set('selected', []);
+            }, function () {
+                this.$notify('Loading failed.', 'danger');
             });
         },
 
@@ -134,6 +142,4 @@ module.exports = {
 
 };
 
-$(function () {
-    new Vue(module.exports).$mount('#contracts');
-});
+Vue.ready(module.exports);

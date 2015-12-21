@@ -6,7 +6,6 @@ use Pagekit\Application as App;
 use Pagekit\Contract\Model\Contract;
 use Pagekit\Contract\Model\Role;
 
-
 /**
  * @Access(admin=true)
  */
@@ -18,20 +17,22 @@ class ContractController
      */
     public function indexAction($filter = null, $page = 0)
     {
+
         return [
             '$view' => [
                 'title' => __('Contracts'),
-                'name' => 'contract:views/admin/contract-index.php'
+                'name' => 'contract:views/admin/index.php'
             ],
             '$data' => [
                 'statuses' => Contract::getStatuses(),
                 'config' => [
-                    'emailVerification' => App::module('contract')->config('require_verification'),
+
                     'filter' => $filter,
                     'page' => $page
                 ]
             ]
         ];
+
     }
 
     public function accountsAction(){
@@ -59,7 +60,14 @@ class ContractController
 
     public function settingsAction()
     {
-        return "Settings View";
+        return [
+            '$view' => [
+                'title' => __('Settings'),
+                'name' => 'contract:views/admin/settings.php'
+            ],
+
+        ];
+
     }
 
     /**

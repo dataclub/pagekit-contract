@@ -7,22 +7,7 @@ return [
      */
     'install' => function ($app) {
 
-        $util = $app['db']->getUtility();
 
-        if ($util->tableExists('@contracts') === false) {
-            $util->createTable('@contracts', function ($table) {
-                $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
-                $table->addColumn('number', 'string', ['length' => 255]);
-                $table->addColumn('entered_city', 'string', ['length' => 255]);
-                $table->addColumn('entered_date', 'datetime', ['notnull' => false]);
-                $table->addColumn('start_date', 'datetime');
-                $table->addColumn('cancellation_date', 'datetime');
-                $table->addColumn('participated', 'boolean', ['default' => false]);
-                $table->addColumn('visited_multiple', 'boolean', ['default' => false]);
-                $table->setPrimaryKey(['id']);
-                $table->addUniqueIndex(['number'], 'CONTRACT_NUMBER');
-            });
-        }
 
     },
 
@@ -53,7 +38,7 @@ return [
                 $table->addColumn('user_id', 'string', ['length' => 255]);
 
                 $table->setPrimaryKey(['id']);
-                $table->addUniqueIndex(['number'], 'CONTRACTS_NUMBER');
+                $table->addUniqueIndex(['name'], 'CONTRACTS_NAME');
                 $table->addIndex(['version_id'], 'CONTRACTS_CONTRACT_VERSION_ID');
                 $table->addIndex(['status_id'], 'CONTRACTS_CONTRACT_STATUS_ID');
             });
