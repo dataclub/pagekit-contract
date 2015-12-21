@@ -146,6 +146,26 @@ return [
             $util->dropTable('@contracts');
         }
 
+        if ($util->tableExists('@contract_accounts')) {
+            $util->dropTable('@contract_accounts');
+        }
+
+        if ($util->tableExists('@contract_comments')) {
+            $util->dropTable('@contract_comments');
+        }
+
+        if ($util->tableExists('@contract_companies')) {
+            $util->dropTable('@contract_companies');
+        }
+
+        if ($util->tableExists('@contract_status')) {
+            $util->dropTable('@contract_status');
+        }
+
+        if ($util->tableExists('@contract_versions')) {
+            $util->dropTable('@contract_versions');
+        }
+
     },
 
     /*
