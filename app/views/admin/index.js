@@ -62,7 +62,7 @@ module.exports = {
         save: function (contract) {
             this.resource.save({id: contract.id}, {contract: contract}).then(function () {
                 this.load();
-                this.$notify('Contract saved.');
+                this.$notify('Contracts saved.');
             }, function (res) {
                 this.load();
                 this.$notify(res.data, 'danger');

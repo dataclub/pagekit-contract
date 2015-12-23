@@ -182,9 +182,11 @@ return [
     'events' => [
 
         'view.scripts' => function ($event, $scripts) {
+            /*
             $scripts->register('contract-settings', 'contract:app/bundle/settings.js', '~extensions');
             $scripts->register('contract-site', 'contract:app/bundle/site.js', '~site-edit');
             $scripts->register('contract-link', 'contract:app/bundle/link.js', '~panel-link');
+            */
         }
 
     ]
