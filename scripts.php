@@ -26,10 +26,10 @@ return [
             $util->createTable('@contracts', function ($table) {
                 $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
                 $table->addColumn('name', 'string', ['length' => 255]);
-                $table->addColumn('date', 'datetime', ['notnull' => false]);
+                $table->addColumn('date', 'datetime', ['notnull' => true]);
                 $table->addColumn('place', 'string', ['length' => 255, 'notnull' => false]);
-                $table->addColumn('startDate', 'datetime');
-                $table->addColumn('cancellationDate', 'datetime');
+                $table->addColumn('startDate', 'datetime', ['notnull' => false]);
+                $table->addColumn('cancellationDate', 'datetime', ['notnull' => false]);
                 $table->addColumn('participated', 'boolean', ['default' => false]);
                 $table->addColumn('visitedMultiple', 'boolean', ['default' => false]);
 

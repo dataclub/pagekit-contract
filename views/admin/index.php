@@ -52,10 +52,10 @@
                     {{ 'Place' | trans }}
                 </th>
                 <th class="pk-table-width-100" v-order:startDate="config.filter.order">
-                    {{ 'Startdate' | trans }}
+                    {{ 'Start' | trans }}
                 </th>
                 <th class="pk-table-width-100" v-order:cancellationDate="config.filter.order">
-                    {{ 'Cancellationdate' | trans }}
+                    {{ 'Cancellation' | trans }}
                 </th>
             </tr>
             </thead>
@@ -77,16 +77,16 @@
                         }" @click="toggleStatus(contract)"></a>
                 </td>
                 <td>
-                    {{ contract.date }}
+                    {{ $trans('%date%', { date: contract.date ? $date(contract.date) : $trans('Never') }) }}
                 </td>
                 <td>
                     {{ contract.place }}
                 </td>
                 <td>
-                    {{ contract.startDate }}
+                    {{ $trans('%date%', { date: contract.startDate ? $date(contract.startDate) : $trans('Never') }) }}
                 </td>
                 <td>
-                    {{ contract.cancellationDate }}
+                    {{ $trans('%date%', { date: contract.cancellationDate ? $date(contract.cancellationDate) : $trans('Never') }) }}
                 </td>
             </tr>
             </tbody>

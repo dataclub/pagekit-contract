@@ -43,6 +43,12 @@ return [
 
     ],
 
+    /*
+    'resources' => [
+        'views:contract' => 'views'
+    ],
+
+    */
 
     /*
      * Define routes.

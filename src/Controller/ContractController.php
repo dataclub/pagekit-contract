@@ -78,47 +78,30 @@ class ContractController
     public function editAction($id = 0)
     {
 
-        try {
+        if (!$id) {
 
-                if (!$contract = Contract::where(compact('id'))->related('user')->first()) {
+            $contract = Contract::create();
 
-                if ($id) {
-                    App::abort(404, __('Invalid post id.'));
-                }
-
-                $contract = Contract::create([
-                    'user_id' => App::user()->id,
-                    'status' => Contract::STATUS_DRAFT,
-                    'date' => new \DateTime()
-                ]);
-
-            }
-
-            $user = App::user();
-            if(!$user->hasAccess('contract: manage all contracts') && $contract->user_id !== $user->id) {
-                App::abort(403, __('Insufficient User Rights.'));
-            }
-
-
-            return [
-                '$view' => [
-                    'title' => $id ? __('Edit Contract') : __('Add Contract'),
-                    'name'  => 'contract:views/admin/contract-edit.php'
-                ],
-                '$data' => [
-                    'contract'     => $contract,
-                    'statuses' => Contract::getStatuses(),
-                    'roles'    => array_values(Role::findAll()),
-                    'canEditAll' => $user->hasAccess('contract: manage all contracts'),
-                ],
-                'contract' => $contract
-            ];
-
-        } catch (\Exception $e) {
-
-            App::message()->error($e->getMessage());
-
-            return App::redirect('@contract/admin');
+        } else if (!$contract = Contract::find($id)) {
+            App::abort(404, 'Contract not found.');
         }
+
+        $title = $id ? __('Edit Contract') : __('Add Contract');
+        return [
+            '$view' => [
+                'title' => $title,
+                'name' => 'contract/admin/edit.php'
+            ],
+            '$data' => [
+                'contract' => $contract,
+                'config' => [
+                    'title' => $title,
+                    'statuses' => Contract::getStatuses(),
+                    //'roles' => array_values($this->getRoles($contract)),
+                    //'emailVerification' => App::module('system/user')->config('require_verification'),
+                    //'currentUser' => App::Contract()->id
+                ]
+            ]
+        ];
     }
 }
