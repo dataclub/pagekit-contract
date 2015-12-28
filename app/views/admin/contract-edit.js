@@ -66,7 +66,7 @@ window.Post = module.exports = {
 
     components: {
 
-        'settings': require('../../components/post-settings.vue')
+        'settings': require('../../components/contract-settings.vue')
 
     }
 

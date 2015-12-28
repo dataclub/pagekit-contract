@@ -1,4 +1,4 @@
-<?php $view->script('edit', 'contract:app/bundle/edit.js', ['vue']) ?>
+<?php $view->script('edit', 'contract:app/bundle/edit.js', ['vue', 'editor', 'uikit']) ?>
 
 <form id="contract" class="uk-form uk-form-horizontal" v-validator="form" @submit.prevent="save | valid" v-cloak>
 

@@ -61,6 +61,13 @@ return [
                 'Pagekit\\Contract\\Controller\\ContractController'
             ]
         ],
+        '/contract: contract' => [
+            'label' => 'List',
+            'parent' => 'contract',
+            'url' => '@contract',
+            'active' => '@contract(/edit)?',
+            'access' => 'contract: manage contracts',
+        ],
         '/api/contract' => [
             'name' => '@contract/api',
             'controller' => [

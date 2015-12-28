@@ -1,10 +1,9 @@
-window.Contract = module.exports = {
+window.Contract = {
 
-    data: function() {
-        return {
-            data: window.$data,
-            contract: window.$data.contract
-        }
+    el: '#contract',
+
+    data: function () {
+        return _.extend({sections: [], form: {}}, window.$data);
     },
 
     created: function () {
@@ -23,57 +22,43 @@ window.Contract = module.exports = {
 
         this.$set('sections', _.sortBy(sections, 'priority'));
 
-        this.resource = this.$resource('api/contract/:id');
     },
 
     ready: function () {
-        this.tab = UIkit.tab(this.$$.tab, {connect: this.$$.content});
-    },
-
-    computed: {
-
-        statuses: function() {
-            return _.map(this.data.statuses, function(status, id) { return { text: status, value: id }; } );
-        },
-
-        authors: function() {
-            return this.data.authors.map(function(user) { return { text: user.username, value: user.id }; });
-        }
-
+        this.tab = UIkit.tab(this.$els.tab, {connect: this.$els.content});
     },
 
     methods: {
 
-        save: function (e) {
-            e.preventDefault();
+        save: function () {
 
-            this.resource.save({ id: this.contract.id }, { contract: this.contract, id: this.contract.id }, function (data) {
+            var data = {contract: this.contract};
 
-                if (!this.contract.id) {
-                    window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
+            this.$broadcast('save', data);
+
+            this.$resource('api/contracts/:id').save({id: this.contract.id}, data).then(function (res) {
+                    if (!this.contract.id) {
+                        window.history.replaceState({}, '', this.$url.route('/admin/contract/edit', {id: res.data.contract.id}))
+                    }
+
+                    this.$set('contract', res.data.contract);
+
+                    this.$notify('Contract saved.');
+                }, function (res) {
+                    this.$notify(res.data, 'danger');
                 }
+            );
 
-                this.$set('contract', data.contract);
-
-                this.$notify('Contract saved.');
-
-            }, function (data) {
-                this.$notify(data, 'danger');
-            });
         }
 
     },
 
     components: {
 
-        'settings': require('../../components/contract-settings.vue')
+        settings: require('../../components/user-settings.vue')
 
     }
 
 };
 
-$(function () {
-
-    new Vue(module.exports).$mount('#contract');
-
-});
+Vue.ready(window.Contract);
