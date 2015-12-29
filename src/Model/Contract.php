@@ -3,9 +3,6 @@
 namespace Pagekit\Contract\Model;
 
 use Pagekit\Application as App;
-use Pagekit\User\Model\AccessModelTrait;
-use Pagekit\System\Model\DataModelTrait;
-use Pagekit\Application\Exception;
 use Pagekit\User\Model\User;
 
 /**
@@ -13,7 +10,7 @@ use Pagekit\User\Model\User;
  */
 class Contract implements \JsonSerializable
 {
-    use DataModelTrait, ContractModelTrait;
+    use ContractModelTrait;
 
     /* Post draft status. */
     const STATUS_DRAFT = 0;
@@ -85,13 +82,7 @@ class Contract implements \JsonSerializable
         return isset($statuses[$this->status]) ? $statuses[$this->status] : __('Unknown');
     }
 
-    public static function getStatuses()
-    {
-        return [
-            self::STATUS_ACTIVE => __('Active'),
-            self::STATUS_BLOCKED => __('Blocked')
-        ];
-    }
+
 
 
     /**
@@ -119,6 +110,14 @@ class Contract implements \JsonSerializable
     {
         if (empty($this->name)) {
             throw new Exception(__('Name required.'));
+        }
+
+        if (empty($this->place)) {
+            throw new Exception(__('Place required.'));
+        }
+
+        if (empty($this->date)) {
+            throw new Exception(__('Date required.'));
         }
 
         return true;

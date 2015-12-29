@@ -78,14 +78,22 @@
 	    },
 
 	    computed: {
+	        statusOptions: function () {
 
-	        statuses: function () {
-
-	            var options = [{text: this.$trans('New'), value: 'new'}].concat(_.map(this.config.statuses, function (status, id) {
+	            var options = _.map(this.$data.statuses, function (status, id) {
 	                return {text: status, value: id};
-	            }));
+	            });
 
 	            return [{label: this.$trans('Filter by'), options: options}];
+	        },
+
+	        authors: function() {
+
+	            var options = _.map(this.$data.authors, function (author) {
+	                return { text: author.username, value: author.user_id };
+	            });
+
+	            return [{ label: this.$trans('Filter by'), options: options }];
 	        },
 
 	        roles: function () {

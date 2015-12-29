@@ -25,6 +25,7 @@ class ContractController
             ],
             '$data' => [
                 'statuses' => Contract::getStatuses(),
+                //'authors'  => Contract::getAuthors(),
                 'config' => [
 
                     'filter' => $filter,
@@ -97,8 +98,7 @@ class ContractController
                 'config' => [
                     'title' => $title,
                     'statuses' => Contract::getStatuses(),
-                    //'roles' => array_values($this->getRoles($contract)),
-                    //'emailVerification' => App::module('system/user')->config('require_verification'),
+
                     //'currentUser' => App::Contract()->id
                 ]
             ]

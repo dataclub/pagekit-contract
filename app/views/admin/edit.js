@@ -36,7 +36,7 @@ window.Contract = {
 
             this.$broadcast('save', data);
 
-            this.$resource('api/contracts/:id').save({id: this.contract.id}, data).then(function (res) {
+            this.$resource('api/contract/:id').save({id: this.contract.id}, data).then(function (res) {
                     if (!this.contract.id) {
                         window.history.replaceState({}, '', this.$url.route('/admin/contract/edit', {id: res.data.contract.id}))
                     }

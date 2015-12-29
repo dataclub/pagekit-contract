@@ -4,7 +4,7 @@ namespace Pagekit\Contract\Controller;
 
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
-use Pagekit\Contract\Model\Role;
+use Pagekit\User\Model\User;
 use Pagekit\Contract\Model\Contract;
 
 /**
@@ -19,33 +19,36 @@ class ContractApiController
     public function indexAction($filter = [], $page = 0, $limit = 0)
     {
         $query  = Contract::query();
-        $filter = array_merge(array_fill_keys(['status', 'search', 'role', 'order', 'access'], ''), $filter);
+        $filter = array_merge(array_fill_keys(['status', 'search', 'order'], ''), $filter);
         extract($filter, EXTR_SKIP);
-/*
+
+        if(!App::user()->hasAccess('contract: manage all posts')) {
+            $author = App::user()->id;
+        }
+
+        if ($author) {
+            $query->where(function ($query) use ($author) {
+                $query->orWhere(['user_id' => (int) $author]);
+            });
+        }
+
+        $query->where(function ($query) use ($search) {
+            $query->orWhere(['place LIKE :search', 'name LIKE :search'], ['search' => "%{$search}%"]);
+        });
+
+
         if (is_numeric($status)) {
 
             $query->where(['status' => (int) $status]);
 
             if ($status) {
-                $query->where('access IS NOT NULL');
+                $query->where('date IS NOT NULL');
             }
 
         } elseif ('new' == $status) {
-            $query->where(['status' => Contract::STATUS_ACTIVE, 'access IS NULL']);
+            $query->where(['status' => User::STATUS_ACTIVE]);
         }
 
-        if ($role) {
-            $query->whereInSet('roles', $role);
-        }
-
-        if ($access) {
-            $query->where('access > ?', [date('Y-m-d H:i:s', time() - max(0, (int) $access))]);
-        }
-
-        if (!preg_match('/^(date|name|place|startDate|cancellationDate)\s(asc|desc)$/i', $order, $match)) {
-            $order = [1 => 'date', 2 => 'asc'];
-        }
-*/
         if (preg_match('/^(date|name|place|startDate|cancellationDate)\s(asc|desc)$/i', $order, $match)) {
             $order = $match;
         } else {
@@ -112,9 +115,9 @@ class ContractApiController
     /**
      * @Route("/", methods="POST")
      * @Route("/{id}", methods="POST", requirements={"id"="\d+"})
-     * @Request({"contract": "array", "password", "id": "int"}, csrf=true)
+     * @Request({"contract": "array", "id": "int"}, csrf=true)
      */
-    public function saveAction($data, $password = null, $id = 0)
+    public function saveAction($data, $id = 0)
     {
         try {
 
@@ -125,37 +128,33 @@ class ContractApiController
                     App::abort(404, __('Contract not found.'));
                 }
 
-                $contract = Contract::create(['date' => new \DateTime]);
+                $data['date'] = new \DateTime;
+                $contract = Contract::create(['date' => $data['date']]);
+
             }
 
             $contract->name = @$data['name'];
-            $contract->date = @$data['date'];
             $contract->place = @$data['place'];
-            $contract->startDate = @$data['startDate'];
-            $contract->cancellationDate = @$data['cancellationDate'];
-
 
             $self = App::contract()->id == $contract->id;
             if ($self && @$data['status'] == Contract::STATUS_BLOCKED) {
                 App::abort(400, __('Unable to block yourself.'));
             }
 
-            if (@$data['date'] != $contract->date) {
-                $contract->set('verified', false);
+            // user without universal access can only edit their own posts
+            if(!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
+                return ['error' => __('Access denied.')];
             }
 
-            $key    = array_search(Role::ROLE_ADMINISTRATOR, @$data['roles'] ?: []);
-            $add    = false !== $key && !$contract->isAdministrator();
-            $remove = false === $key && $contract->isAdministrator();
-
-            if (($self && $remove) || !App::contract()->isAdministrator() && ($remove || $add)) {
-                App::abort(403, 'Cannot add/remove Admin Role.');
+            // user without universal access is not allowed to assign posts to other users
+            if(App::user()->hasAccess('contract: manage all posts')) {
+                $data['user_id'] = App::user()->id;
             }
 
-            unset($data['access'], $data['login'], $data['date']);
+            if($contract->validate()){
+                $contract->save($data);
+            }
 
-            $contract->validate();
-            $contract->save($data);
 
             return ['message' => 'success', 'contract' => $contract];
 

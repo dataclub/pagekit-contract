@@ -13,7 +13,7 @@ trait ContractModelTrait
      */
     public static function updateLogin(Contract $contract)
     {
-        static::where(['id' => $contract->id])->update(['login' => date('Y-m-d H:i:s')]);
+        static::where(['id' => $contract->id])->update(['date' => date('Y-m-d H:i:s')]);
     }
 
     /**
@@ -25,23 +25,6 @@ trait ContractModelTrait
     }
 
     /**
-     * Finds user's roles.
-     *
-     * @param  Contract $contract
-     * @return Role[]
-     */
-    public static function findRoles(Contract $contract)
-    {
-        static $cached = [];
-
-        if ($ids = array_diff($contract->roles, array_keys($cached))) {
-            $cached += Role::where('id IN ('.implode(',', $contract->roles).')')->get();
-        }
-
-        return array_intersect_key($cached, array_flip($contract->roles));
-    }
-
-    /**
      * @Saved
      */
     public static function saved($event, Contract $contract)
@@ -49,5 +32,21 @@ trait ContractModelTrait
         if (!$contract->hasRole(Role::ROLE_AUTHENTICATED)) {
             $contract->roles[] = Role::ROLE_AUTHENTICATED;
         }
+    }
+
+    /**
+     * Get all users who have written an article
+     */
+    public static function getAuthors()
+    {
+        return self::query()->select('user_id', 'name', 'username')->groupBy('user_id', 'name')->join('@system_user', 'user_id = @system_user.id')->execute()->fetchAll();
+    }
+
+    public static function getStatuses()
+    {
+        return [
+            self::STATUS_ACTIVE => __('Active'),
+            self::STATUS_BLOCKED => __('Blocked')
+        ];
     }
 }

@@ -164,6 +164,10 @@ return [
         'contract: manage settings' => [
             'title' => 'Manage settings'
         ],
+        'contract: manage all posts' => [
+            'title' => 'Manage all posts',
+            'description' => 'Create, edit, delete and publish posts by all users'
+        ],
 
     ],
 

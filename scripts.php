@@ -34,7 +34,8 @@ return [
                 $table->addColumn('visitedMultiple', 'boolean', ['default' => false]);
 
                 $table->addColumn('version_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
-                $table->addColumn('status_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
+                //$table->addColumn('status_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
+                $table->addColumn('status', 'smallint');
                 $table->addColumn('user_id', 'string', ['length' => 255]);
 
                 $table->setPrimaryKey(['id']);

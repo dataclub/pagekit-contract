@@ -43,7 +43,7 @@
                     {{ 'Contracts' | trans }}
                 </th>
                 <th class="pk-table-width-100 uk-text-center">
-                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status" :options="statuses"></input-filter>
+                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status" :options="statusOptions"></input-filter>
                 </th>
                 <th class="pk-table-width-100" v-order:date="config.filter.order">
                     {{ 'Date' | trans }}
@@ -56,6 +56,10 @@
                 </th>
                 <th class="pk-table-width-100" v-order:cancellationDate="config.filter.order">
                     {{ 'Cancellation' | trans }}
+                </th>
+                <th class="pk-table-width-100">
+                    <span v-if="!canEditAll">{{ 'Author' | trans }}</span>
+                    <input-filter :title="$trans('Author')" :value.sync="config.filter.author" :options="authors" v-else></input-filter>
                 </th>
             </tr>
             </thead>
@@ -87,6 +91,9 @@
                 </td>
                 <td>
                     {{ $trans('%date%', { date: contract.cancellationDate ? $date(contract.cancellationDate) : $trans('Never') }) }}
+                </td>
+                <td>
+                    <a :href="$url.route('admin/contract/edit', { id: contract.user_id })">{{ contract.user_id }}</a>
                 </td>
             </tr>
             </tbody>
