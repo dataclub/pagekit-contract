@@ -49,7 +49,11 @@
 	    el: '#contract',
 
 	    data: function () {
-	        return _.extend({sections: [], form: {}}, window.$data);
+	        return {
+	            data: window.$data,
+	            contract: window.$data.contract,
+	            sections: []
+	        }
 	    },
 
 	    created: function () {
@@ -68,35 +72,49 @@
 
 	        this.$set('sections', _.sortBy(sections, 'priority'));
 
+	        this.resource = this.$resource('api/contract/:id');
+
 	    },
 
 	    ready: function () {
 	        this.tab = UIkit.tab(this.$els.tab, {connect: this.$els.content});
 	    },
 
+	    computed: {
+
+	        statusOptions: function () {
+	            console.log(this.$data);
+	            var options = _.map(this.$data.statuses, function (status, id) {
+	                return {text: status, value: id};
+	            });
+
+	            return [{label: this.$trans('Filter by'), options: options}];
+	        },
+	    },
 	    methods: {
 
 	        save: function () {
-
-	            var data = {contract: this.contract};
+	            var data = {contract: this.contract, id: this.contract.id};
 
 	            this.$broadcast('save', data);
 
-	            this.$resource('api/contract/:id').save({id: this.contract.id}, data).then(function (res) {
-	                    if (!this.contract.id) {
-	                        window.history.replaceState({}, '', this.$url.route('/admin/contract/edit', {id: res.data.contract.id}))
-	                    }
-
-	                    this.$set('contract', res.data.contract);
-
-	                    this.$notify('Contract saved.');
-	                }, function (res) {
-	                    this.$notify(res.data, 'danger');
+	            this.resource.save({id: this.contract.id}, data, function (data) {
+	                if (!this.contract.id) {
+	                    window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
 	                }
-	            );
 
-	        }
+	                this.$data.oldStartDateValue = data.contract.startDate;
+	                this.$data.newStartDateValue = this.$data.oldStartDateValue == null ? new Date() : this.$data.oldStartDateValue;
 
+	                this.$data.oldCancellationDateValue = data.contract.cancellationDate;
+	                this.$data.newCancellationDateValue = this.$data.oldCancellationDateValue == null ? new Date() : this.$data.oldCancellationDateValue;
+
+	                this.$set('contract', data.contract);
+	                this.$notify('Contract saved.');
+	            }, function (data) {
+	                this.$notify(data, 'danger');
+	            });
+	        },
 	    },
 
 	    components: {
@@ -108,6 +126,8 @@
 	};
 
 	Vue.ready(window.Contract);
+
+
 
 
 /***/ },
@@ -128,7 +148,7 @@
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
 	  if (!hotAPI.compatible) return
-	  var id = "/Users/dataclub/public_html/pagekit/packages/pagekit/contract/app/components/user-settings.vue"
+	  var id = "/Users/dataclub/public_html/pagekit/packages/pagekit/contract/app/components/edit.vue"
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
@@ -156,19 +176,19 @@
 	//             </div>
 
 	//             <div class="uk-form-row">
-	//                 <label for="form-place" class="uk-form-label">{{ 'Place' | trans }}</label>
+	//                 <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
 	//                 <div class="uk-form-controls">
-	//                     <input id="form-place" class="uk-form-width-large" type="text" name="place" v-model="contract.place" v-validate:required>
-	//                     <p class="uk-form-help-block uk-text-danger" v-show="form.place.invalid">{{ 'Place cannot be blank.' | trans }}</p>
+	//                     <select id="form-status" class="uk-width-1-1" v-model="contract.status">
+	//                         <option v-for="(id, status) in data.statuses" :value="id">{{status}}</option>
+	//                     </select>
 	//                 </div>
 	//             </div>
 
 	//             <div class="uk-form-row">
-	//                 <span class="uk-form-label">{{ 'Status' | trans }}</span>
-	//                 <div class="uk-form-controls uk-form-controls-text">
-	//                     <p class="uk-form-controls-condensed" v-for="status in config.statuses">
-	//                         <label><input type="radio" v-model="contract.status" :value="parseInt($key)" :disabled="config.currentUser == contract.id"> {{ status }}</label>
-	//                     </p>
+	//                 <label for="form-place" class="uk-form-label">{{ 'Place' | trans }}</label>
+	//                 <div class="uk-form-controls">
+	//                     <input id="form-place" class="uk-form-width-large" type="text" name="place" v-model="contract.place" v-validate:required>
+	//                     <p class="uk-form-help-block uk-text-danger" v-show="form.place.invalid">{{ 'Place cannot be blank.' | trans }}</p>
 	//                 </div>
 	//             </div>
 
@@ -179,17 +199,38 @@
 	//                 </div>
 	//             </div>
 
-	//             <div class="uk-form-row" v-if='contract.startDate'>
-	//                 <span class="uk-form-label">{{ 'Start' | trans }}</span>
-	//                 <div class="uk-form-controls uk-form-controls-text">
-	//                     {{ contract.startDate ? $trans('%date%', { date: $date(contract.startDate) }) : '-' }}
+	//             <div class="uk-form-row">
+	//                 <label for="form-start" class="uk-form-label">
+	//                     {{ 'Start' | trans }}
+	//                     <a href="#" v-show="!editingStartdate" class="pk-icon-check pk-icon-hover" :title="'Change Startdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusStartdate(1)"></a>
+	//                     <a href="#" :class="{'uk-hidden' : (!editingStartdate)}" class="pk-icon-block pk-icon-hover" :title="'Hide Startdate' | trans" data-uk-tooltip="{delay: 500}" @click="statusStartdate(0)"></a>
+	//                 </label>
+
+	//                 <div class="uk-form-controls uk-form-controls-text" v-show="!editingStartdate">
+	//                     {{ startDate ? $trans('%date%', { date: $date(startDate) }) : '-' }}
+	//                 </div>
+	//                 <div class="uk-form-controls" :class="{'uk-hidden' : (!editingStartdate)}">
+	//                     <div class="uk-form-start">
+	//                         <input-date :datetime.sync="contract.startDate" id="form-date" class="uk-form-width-large" ></input-date>
+	//                         <input type="hidden" name="startDate" :value=contract.startDate @blur="status(0);">
+	//                     </div>
 	//                 </div>
 	//             </div>
 
-	//             <div class="uk-form-row" v-if='contract.cancellationDate'>
-	//                 <span class="uk-form-label">{{ 'Cancellation' | trans }}</span>
-	//                 <div class="uk-form-controls uk-form-controls-text">
-	//                     {{ contract.cancellationDate ? $trans('%date%', { date: $date(contract.cancellationDate) }) : '-' }}
+	//             <div class="uk-form-row">
+	//                 <label for="form-cancellation" class="uk-form-label">
+	//                     {{ 'Cancellation' | trans }}
+	//                     <a href="#" v-show="!editingCancellationdate" class="pk-icon-check pk-icon-hover" :title="'Change Cancellationdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusCancellationdate(1)"></a>
+	//                     <a href="#" :class="{'uk-hidden' : (!editingCancellationdate)}" class="pk-icon-block pk-icon-hover" :title="'Hide Cancellationdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusCancellationdate(0)"></a>
+	//                 </label>
+
+	//                 <div class="uk-form-controls uk-form-controls-text" v-show="!editingCancellationdate">
+	//                     {{ cancellationDate ? $trans('%date%', { date: $date(cancellationDate) }) : '-' }}
+	//                 </div>
+	//                 <div class="uk-form-controls" :class="{'uk-hidden' : (!editingCancellationdate)}">
+	//                     <div class="uk-form-cancellation">
+	//                         <input-date :datetime.sync="contract.cancellationDate" id="form-date" class="uk-form-width-large" ></input-date>
+	//                     </div>
 	//                 </div>
 	//             </div>
 
@@ -207,28 +248,72 @@
 	        label: 'Contract'
 	    },
 
-	    props: ['contract', 'config', 'form'],
+	    props: ['contract', 'data', 'config', 'form'],
 
 	    data: function data() {
-	        return { password: '', hidePassword: true, editingPassword: false };
+	        var data = window.$data.contract;
+
+	        var startDate = data.startDate;
+	        var cancellationDate = data.cancellationDate;
+
+	        data.startDate = data.startDate == null ? new Date() : data.startDate;
+	        data.cancellationDate = data.cancellationDate == null ? new Date() : data.cancellationDate;
+
+	        return {
+	            data: window.$data,
+	            contract: data,
+	            sections: [],
+	            editingStartdate: false,
+	            editingCancellationdate: false,
+	            startDate: startDate,
+	            cancellationDate: cancellationDate,
+	            saved: false,
+	            newStartDateValue: data.startDate,
+	            oldStartDateValue: startDate,
+	            newCancellationDateValue: data.cancellationDate,
+	            oldCancellationDateValue: cancellationDate
+	        };
 	    },
 
 	    ready: function ready() {
 	        UIkit.init(this.$el);
 	    },
+	    methods: {
+	        statusStartdate: function statusStartdate(value) {
+	            this.$data.editingStartdate = value;
 
-	    computed: {
+	            if (value) {
+	                this.contract.startDate = this.$data.newStartDateValue == null ? new Date() : this.$data.newStartDateValue;
+	            } else {
+	                this.$data.newStartDateValue = this.contract.startDate;
+	            }
+	        },
+	        statusCancellationdate: function statusCancellationdate(value) {
+	            this.$data.editingCancellationdate = value;
 
-	        isNew: function isNew() {
-	            return !this.contract.date && this.contract.status;
+	            if (value) {
+	                this.contract.cancellationDate = this.$data.newCancellationDateValue == null ? new Date() : this.$data.newCancellationDateValue;;
+	            } else {
+	                this.$data.newCancellationDateValue = this.contract.cancellationDate;
+	            }
 	        }
 
 	    },
 
+	    computed: {},
+
 	    events: {
+	        save: function save(data) {
+	            this.$data.oldStartDateValue = this.$data.editingStartdate && this.$data.oldStartDateValue == null ? data.contract.startDate : this.$data.oldStartDateValue;
+	            this.$data.newStartDateValue = data.contract.startDate;
+	            data.contract.startDate = this.$data.editingStartdate ? this.$data.newStartDateValue : this.$data.oldStartDateValue;
 
-	        save: function save(data) {}
+	            this.$data.oldCancellationDateValue = this.$data.editingCancellationdate && this.$data.oldCancellationDateValue == null ? data.contract.cancellationDate : this.$data.oldCancellationDateValue;
+	            this.$data.newCancellationDateValue = data.contract.cancellationDate;
+	            data.contract.cancellationDate = this.$data.editingCancellationdate ? this.$data.newCancellationDateValue : this.$data.oldCancellationDateValue;
 
+	            this.$data.saved = true;
+	        }
 	    }
 
 	};
@@ -239,7 +324,7 @@
 /* 7 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"uk-grid\" data-uk-grid-margin>\n        <div class=\"uk-width-medium-2-3 uk-width-large-3-4\">\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-name\" class=\"uk-form-label\">{{ 'Name' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <input id=\"form-name\" class=\"uk-form-width-large\" type=\"text\" name=\"name\" v-model=\"contract.name\" v-validate:required>\n                    <p class=\"uk-form-help-block uk-text-danger\" v-show=\"form.name.invalid\">{{ 'Name cannot be blank.' | trans }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-place\" class=\"uk-form-label\">{{ 'Place' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <input id=\"form-place\" class=\"uk-form-width-large\" type=\"text\" name=\"place\" v-model=\"contract.place\" v-validate:required>\n                    <p class=\"uk-form-help-block uk-text-danger\" v-show=\"form.place.invalid\">{{ 'Place cannot be blank.' | trans }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <span class=\"uk-form-label\">{{ 'Status' | trans }}</span>\n                <div class=\"uk-form-controls uk-form-controls-text\">\n                    <p class=\"uk-form-controls-condensed\" v-for=\"status in config.statuses\">\n                        <label><input type=\"radio\" v-model=\"contract.status\" :value=\"parseInt($key)\" :disabled=\"config.currentUser == contract.id\"> {{ status }}</label>\n                    </p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\" v-if='contract.date'>\n                <span class=\"uk-form-label\">{{ 'Date' | trans }}</span>\n                <div class=\"uk-form-controls uk-form-controls-text\">\n                    <p>{{ $trans('%date%', { date: contract.date ? $date(contract.date) : $trans('Never') }) }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\" v-if='contract.startDate'>\n                <span class=\"uk-form-label\">{{ 'Start' | trans }}</span>\n                <div class=\"uk-form-controls uk-form-controls-text\">\n                    {{ contract.startDate ? $trans('%date%', { date: $date(contract.startDate) }) : '-' }}\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\" v-if='contract.cancellationDate'>\n                <span class=\"uk-form-label\">{{ 'Cancellation' | trans }}</span>\n                <div class=\"uk-form-controls uk-form-controls-text\">\n                    {{ contract.cancellationDate ? $trans('%date%', { date: $date(contract.cancellationDate) }) : '-' }}\n                </div>\n            </div>\n\n        </div>\n\n    </div>";
+	module.exports = "<div class=\"uk-grid\" data-uk-grid-margin>\n        <div class=\"uk-width-medium-2-3 uk-width-large-3-4\">\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-name\" class=\"uk-form-label\">{{ 'Name' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <input id=\"form-name\" class=\"uk-form-width-large\" type=\"text\" name=\"name\" v-model=\"contract.name\" v-validate:required>\n                    <p class=\"uk-form-help-block uk-text-danger\" v-show=\"form.name.invalid\">{{ 'Name cannot be blank.' | trans }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-status\" class=\"uk-form-label\">{{ 'Status' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <select id=\"form-status\" class=\"uk-width-1-1\" v-model=\"contract.status\">\n                        <option v-for=\"(id, status) in data.statuses\" :value=\"id\">{{status}}</option>\n                    </select>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-place\" class=\"uk-form-label\">{{ 'Place' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <input id=\"form-place\" class=\"uk-form-width-large\" type=\"text\" name=\"place\" v-model=\"contract.place\" v-validate:required>\n                    <p class=\"uk-form-help-block uk-text-danger\" v-show=\"form.place.invalid\">{{ 'Place cannot be blank.' | trans }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\" v-if='contract.date'>\n                <span class=\"uk-form-label\">{{ 'Date' | trans }}</span>\n                <div class=\"uk-form-controls uk-form-controls-text\">\n                    <p>{{ $trans('%date%', { date: contract.date ? $date(contract.date) : $trans('Never') }) }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-start\" class=\"uk-form-label\">\n                    {{ 'Start' | trans }}\n                    <a href=\"#\" v-show=\"!editingStartdate\" class=\"pk-icon-check pk-icon-hover\" :title=\"'Change Startdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusStartdate(1)\"></a>\n                    <a href=\"#\" :class=\"{'uk-hidden' : (!editingStartdate)}\" class=\"pk-icon-block pk-icon-hover\" :title=\"'Hide Startdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click=\"statusStartdate(0)\"></a>\n                </label>\n\n                <div class=\"uk-form-controls uk-form-controls-text\" v-show=\"!editingStartdate\">\n                    {{ startDate ? $trans('%date%', { date: $date(startDate) }) : '-' }}\n                </div>\n                <div class=\"uk-form-controls\" :class=\"{'uk-hidden' : (!editingStartdate)}\">\n                    <div class=\"uk-form-start\">\n                        <input-date :datetime.sync=\"contract.startDate\" id=\"form-date\" class=\"uk-form-width-large\" ></input-date>\n                        <input type=\"hidden\" name=\"startDate\" :value=contract.startDate @blur=\"status(0);\">\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-cancellation\" class=\"uk-form-label\">\n                    {{ 'Cancellation' | trans }}\n                    <a href=\"#\" v-show=\"!editingCancellationdate\" class=\"pk-icon-check pk-icon-hover\" :title=\"'Change Cancellationdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusCancellationdate(1)\"></a>\n                    <a href=\"#\" :class=\"{'uk-hidden' : (!editingCancellationdate)}\" class=\"pk-icon-block pk-icon-hover\" :title=\"'Hide Cancellationdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusCancellationdate(0)\"></a>\n                </label>\n\n                <div class=\"uk-form-controls uk-form-controls-text\" v-show=\"!editingCancellationdate\">\n                    {{ cancellationDate ? $trans('%date%', { date: $date(cancellationDate) }) : '-' }}\n                </div>\n                <div class=\"uk-form-controls\" :class=\"{'uk-hidden' : (!editingCancellationdate)}\">\n                    <div class=\"uk-form-cancellation\">\n                        <input-date :datetime.sync=\"contract.cancellationDate\" id=\"form-date\" class=\"uk-form-width-large\" ></input-date>\n                    </div>\n                </div>\n            </div>\n\n\n        </div>\n\n    </div>";
 
 /***/ }
 /******/ ]);

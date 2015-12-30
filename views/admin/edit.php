@@ -5,7 +5,8 @@
     <div class="uk-margin uk-flex uk-flex-space-between uk-flex-wrap" data-uk-margin>
         <div data-uk-margin>
 
-            <h2 class="uk-margin-remove">{{ config.title }}</h2>
+            <h2 class="uk-margin-remove" v-if="contract.id">{{ 'Edit Contract' | trans }}</h2>
+            <h2 class="uk-margin-remove" v-else>{{ 'Add Contract' | trans }}</h2>
 
         </div>
         <div data-uk-margin>
@@ -22,7 +23,7 @@
 
     <div class="uk-switcher uk-margin" v-el:content>
         <div v-for="section in sections">
-            <component :is="section.name" :contract="contract" :config="config" :form="form"></component>
+            <component :is="section.name" :contract.sync="contract" :data.sync="data" :config="data.config" :form="form"></component>
         </div>
     </div>
 

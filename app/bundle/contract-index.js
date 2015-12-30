@@ -106,7 +106,7 @@
 	        save: function (contract) {
 	            this.resource.save({id: contract.id}, {contract: contract}, function (data) {
 	                this.load();
-	                this.$notify('Contract saved.');
+	                this.$notify(this.$trans('Contract saved.'));
 	            });
 	        },
 
@@ -120,14 +120,14 @@
 
 	            this.resource.save({id: 'bulk'}, {contracts: contracts}, function (data) {
 	                this.load();
-	                this.$notify('Contracts saved.');
+					this.$notify(this.$trans('Contract saved.'));
 	            });
 	        },
 
 	        remove: function () {
 	            this.resource.delete({id: 'bulk'}, {ids: this.selected}, function (data) {
 	                this.load();
-	                this.$notify('Contracts deleted.');
+					this.$notify(this.$trans('Contract deleted.'));
 	            });
 	        },
 

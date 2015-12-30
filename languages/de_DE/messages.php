@@ -14,6 +14,12 @@
     "Number cannot be blank." => "Vertragsnummer darf nicht leer sein.",
     "Name cannot be blank." => "Vertragsname darf nicht leer sein.",
     "Place cannot be blank." => "Vertragsort darf nicht leer sein.",
+    "Delete contracts?" => "Verträge löschen?",
+    "Never" => "Nie",
+    "Contract saved." => "Verträge gespeichert.",
+    "Contract deleted." => "Verträge gelöscht,",
+    "Change Startdate" => "Startdatum ändern",
+    "No contracts found." => "Keine Verträge gefunden.",
 
 );
 

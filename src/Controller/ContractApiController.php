@@ -22,7 +22,8 @@ class ContractApiController
         $filter = array_merge(array_fill_keys(['status', 'search', 'order'], ''), $filter);
         extract($filter, EXTR_SKIP);
 
-        if(!App::user()->hasAccess('contract: manage all posts')) {
+        $author = false;
+        if(!App::user()->hasAccess('contract: manage all contracts')) {
             $author = App::user()->id;
         }
 
@@ -49,6 +50,7 @@ class ContractApiController
             $query->where(['status' => User::STATUS_ACTIVE]);
         }
 
+
         if (preg_match('/^(date|name|place|startDate|cancellationDate)\s(asc|desc)$/i', $order, $match)) {
             $order = $match;
         } else {
@@ -61,7 +63,7 @@ class ContractApiController
         $count   = $query->count();
         $pages   = ceil($count / $limit);
         $page    = max(0, min($pages - 1, $page));
-        $contracts  = array_values($query->offset($page * $limit)->limit($limit)->orderBy($order[1], $order[2])->get());
+        $contracts  = array_values($query->offset($page * $limit)->related('user')->limit($limit)->orderBy($order[1], $order[2])->get());
 
         return compact('contracts', 'pages', 'count');
     }

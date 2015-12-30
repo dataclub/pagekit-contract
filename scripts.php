@@ -36,12 +36,13 @@ return [
                 $table->addColumn('version_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
                 //$table->addColumn('status_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
                 $table->addColumn('status', 'smallint');
-                $table->addColumn('user_id', 'string', ['length' => 255]);
+                $table->addColumn('user_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
 
                 $table->setPrimaryKey(['id']);
                 $table->addUniqueIndex(['name'], 'CONTRACTS_NAME');
                 $table->addIndex(['version_id'], 'CONTRACTS_CONTRACT_VERSION_ID');
-                $table->addIndex(['status_id'], 'CONTRACTS_CONTRACT_STATUS_ID');
+                //$table->addIndex(['status_id'], 'CONTRACTS_CONTRACT_STATUS_ID');
+                $table->addIndex(['user_id'], 'CONTRACTS_USER_ID');
             });
         }
 

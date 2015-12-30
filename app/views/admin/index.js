@@ -42,23 +42,13 @@ module.exports = {
         },
 
         authors: function() {
-
             var options = _.map(this.$data.authors, function (author) {
+
                 return { text: author.username, value: author.user_id };
             });
 
             return [{ label: this.$trans('Filter by'), options: options }];
         },
-
-        roles: function () {
-
-            var options = this.config.roles.map(function (role) {
-                return {text: role.name, value: role.id};
-            });
-
-            return [{label: this.$trans('Filter by'), options: options}];
-        }
-
     },
 
     methods: {
@@ -128,6 +118,7 @@ module.exports = {
             page = page !== undefined ? page : this.config.page;
 
             this.resource.query({filter: this.config.filter, page: page}).then( function (res) {
+                console.log(res.data);
                 var data = res.data;
 
                 this.$set('contracts', data.contracts);

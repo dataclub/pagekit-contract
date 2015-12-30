@@ -1,7 +1,8 @@
 <?php
 
-use Pagekit\Application;
 
+
+use Pagekit\Contract\Event\RouteListener;
 /*
  * This array is the module definition.
  * It's used by Pagekit to load your extension and register all things
@@ -20,17 +21,6 @@ return [
      */
     'type' => 'extension',
 
-    /*
-     * Main entry point. Called when your extension is both installed and activated.
-     * Either assign an closure or a string that points to a PHP class.
-     * Example: 'main' => 'Pagekit\\Contract\\ContractExtension'
-     */
-    'main' => function (Application $app) {
-
-        // bootstrap code
-
-    },
-    'main' => 'Pagekit\\Contract\\ContractModule',
 
     /*
      * Register all namespaces to be loaded.
@@ -76,29 +66,20 @@ return [
         ],
 
     ],
+    'main' => 'Pagekit\\Contract\\ContractModule',
 
     /*
      * Define menu items for the backend.
      */
     'menu' => [
 
-        // name, can be used for menu hierarchy
         'contract' => [
-
-            // Label to display
             'label' => 'Contract',
-
-            // Icon to display
             'icon' => 'contract:contract.svg',
-
-            // URL this menu item links to
             'url' => '@contract/admin',
-
-            // Optional: Expression to check if menu item is active on current url
-            // 'active' => '@contract*'
-
-            // Optional: Limit access to roles which have specific permission assigned
-            // 'access' => 'contract: manage contract'
+            'active' => '@contract*',
+            'access' => 'contract: manage own contracts || contract: manage all contracts || contract: manage contract comments || system: manage settings',
+            'priority' => 110
         ],
 
         'contract: panel' => [
@@ -161,13 +142,25 @@ return [
 
         // Unique name.
         // Convention: extension name and speaking name of this permission (spaces allowed)
+        'contract: manage contract'  => [
+            'title' => 'Manage contract'
+        ],
         'contract: manage settings' => [
             'title' => 'Manage settings'
         ],
-        'contract: manage all posts' => [
+        'contract: manage all contracts' => [
             'title' => 'Manage all posts',
             'description' => 'Create, edit, delete and publish posts by all users'
         ],
+        'contract: manage own contracts' => [
+            'title' => 'Manage own posts',
+            'description' => 'Create, edit, delete and publish own posts'
+        ],
+        'contract: manage contract comments' => [
+            'title' => 'Manage contract comments',
+            'description' => 'Create, edit, delete and publish contract comments'
+        ],
+
 
     ],
 
@@ -197,13 +190,19 @@ return [
      * Listen to events.
      */
     'events' => [
+        'boot' => function ($event, $app) {
+            $app->subscribe(
+
+                new RouteListener()
+            );
+        },
 
         'view.scripts' => function ($event, $scripts) {
-            /*
+/*
             $scripts->register('contract-settings', 'contract:app/bundle/settings.js', '~extensions');
             $scripts->register('contract-site', 'contract:app/bundle/site.js', '~site-edit');
             $scripts->register('contract-link', 'contract:app/bundle/link.js', '~panel-link');
-            */
+*/
         }
 
     ]

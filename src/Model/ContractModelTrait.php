@@ -17,21 +17,10 @@ trait ContractModelTrait
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public static function updateAccess(Contract $contract)
-    {
-        static::where(['id' => $contract->id])->update(['access' => date('Y-m-d H:i:s')]);
-    }
-
-    /**
      * @Saved
      */
     public static function saved($event, Contract $contract)
     {
-        if (!$contract->hasRole(Role::ROLE_AUTHENTICATED)) {
-            $contract->roles[] = Role::ROLE_AUTHENTICATED;
-        }
     }
 
     /**
@@ -39,7 +28,8 @@ trait ContractModelTrait
      */
     public static function getAuthors()
     {
-        return self::query()->select('user_id', 'name', 'username')->groupBy('user_id', 'name')->join('@system_user', 'user_id = @system_user.id')->execute()->fetchAll();
+        return self::query()->select('user_id, @system_user.name, @system_user.username')->groupBy('user_id, @system_user.name')->join('@system_user', 'user_id = @system_user.id')->execute()->fetchAll();
+
     }
 
     public static function getStatuses()

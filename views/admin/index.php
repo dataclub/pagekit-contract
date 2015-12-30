@@ -14,7 +14,7 @@
                     <ul class="uk-subnav pk-subnav-icon">
                         <li><a class="pk-icon-check pk-icon-hover" :title="'Activate' | trans" data-uk-tooltip="{delay: 500}" @click="status(1)"></a></li>
                         <li><a class="pk-icon-block pk-icon-hover" :title="'Block' | trans" data-uk-tooltip="{delay: 500}" @click="status(0)"></a></li>
-                        <li><a class="pk-icon-delete pk-icon-hover" :title="'Delete' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="remove" v-confirm="'Delete users?'"></a></li>
+                        <li><a class="pk-icon-delete pk-icon-hover" :title="'Delete' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="remove" v-confirm="'Delete contracts?'"></a></li>
                     </ul>
                 </div>
 
@@ -58,8 +58,7 @@
                     {{ 'Cancellation' | trans }}
                 </th>
                 <th class="pk-table-width-100">
-                    <span v-if="!canEditAll">{{ 'Author' | trans }}</span>
-                    <input-filter :title="$trans('Author')" :value.sync="config.filter.author" :options="authors" v-else></input-filter>
+                    <input-filter :title="$trans('Author')" :value.sync="config.filter.author" :options="authors"></input-filter>
                 </th>
             </tr>
             </thead>
@@ -93,14 +92,14 @@
                     {{ $trans('%date%', { date: contract.cancellationDate ? $date(contract.cancellationDate) : $trans('Never') }) }}
                 </td>
                 <td>
-                    <a :href="$url.route('admin/contract/edit', { id: contract.user_id })">{{ contract.user_id }}</a>
+                    <a :href="$url.route('admin/user/edit', { id: contract.user_id })">{{ contract.author }}</a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="contracts && !contracts.length">{{ 'No contract found.' | trans }}</h3>
+    <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="contracts && !contracts.length">{{ 'No contracts found.' | trans }}</h3>
 
     <v-pagination :page.sync="config.page" :pages="pages" v-show="pages > 1"></v-pagination>
 

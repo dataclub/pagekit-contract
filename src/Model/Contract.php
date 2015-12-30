@@ -67,6 +67,11 @@ class Contract implements \JsonSerializable
      */
     public $user;
 
+    /** @var array */
+    protected static $properties = [
+        'author' => 'getAuthor',
+        ];
+
     /**
      * {@inheritdoc}
      */
@@ -82,8 +87,10 @@ class Contract implements \JsonSerializable
         return isset($statuses[$this->status]) ? $statuses[$this->status] : __('Unknown');
     }
 
-
-
+    public function getAuthor()
+    {
+        return $this->user ? $this->user->username : null;
+    }
 
     /**
      * Check if the user is active.
