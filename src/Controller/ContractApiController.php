@@ -19,7 +19,7 @@ class ContractApiController
     public function indexAction($filter = [], $page = 0, $limit = 0)
     {
         $query  = Contract::query();
-        $filter = array_merge(array_fill_keys(['status', 'search', 'order'], ''), $filter);
+        $filter = array_merge(array_fill_keys(['status_id', 'search', 'order'], ''), $filter);
         extract($filter, EXTR_SKIP);
 
         $author = false;
@@ -38,16 +38,13 @@ class ContractApiController
         });
 
 
-        if (is_numeric($status)) {
+        if (is_numeric($status_id)) {
 
-            $query->where(['status' => (int) $status]);
+            $query->where(['status_id' => (int) $status_id]);
 
-            if ($status) {
+            if ($status_id) {
                 $query->where('date IS NOT NULL');
             }
-
-        } elseif ('new' == $status) {
-            $query->where(['status' => User::STATUS_ACTIVE]);
         }
 
         if (is_numeric($participated)) {
@@ -72,7 +69,7 @@ class ContractApiController
         $count   = $query->count();
         $pages   = ceil($count / $limit);
         $page    = max(0, min($pages - 1, $page));
-        $contracts  = array_values($query->offset($page * $limit)->related('user')->limit($limit)->orderBy($order[1], $order[2])->get());
+        $contracts  = array_values($query->offset($page * $limit)->related('user', 'status')->limit($limit)->orderBy($order[1], $order[2])->get());
 
         return compact('contracts', 'pages', 'count');
     }
@@ -86,28 +83,11 @@ class ContractApiController
         $filter = array_merge(array_fill_keys(['status', 'search', 'role', 'order', 'access'], ''), (array)$filter);
         extract($filter, EXTR_SKIP);
 
-        if (is_numeric($status)) {
-
-            $query->where(['status' => (int) $status]);
-
-            if ($status) {
-                $query->where('access IS NOT NULL');
-            }
-
-        } elseif ('new' == $status) {
-            $query->where(['status' => Contract::STATUS_ACTIVE, 'access IS NULL']);
-        }
-
-        if ($role) {
-            $query->whereInSet('roles', $role);
-        }
-
-        if ($access) {
-            $query->where('access > ?', [date('Y-m-d H:i:s', time() - max(0, (int) $access))]);
+        if (is_numeric($status_id)) {
+            $query->where(['status_id' => (int) $status_id]);
         }
 
         $count = $query->count();
-
         return compact('count');
     }
 
@@ -148,9 +128,6 @@ class ContractApiController
             $contract->place = @$data['place'];
 
             $self = App::contract()->id == $contract->id;
-            if ($self && @$data['status'] == Contract::STATUS_BLOCKED) {
-                App::abort(400, __('Unable to block yourself.'));
-            }
 
             // user without universal access can only edit their own posts
             if(!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {

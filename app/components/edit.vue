@@ -15,7 +15,7 @@
                 <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
                 <div class="uk-form-controls">
                     <select id="form-status" class="uk-width-1-1" v-model="contract.status_id">
-                        <option v-for="(id, status) in data.statuses" :value="id">{{status}}</option>
+                        <option v-for="(id, name) in data.statuses" :value="id">{{name}}</option>
                     </select>
                 </div>
             </div>
@@ -36,16 +36,16 @@
             </div>
 
             <div class="uk-form-row">
-                <label for="form-status" class="uk-form-label">{{ 'Participated?' | trans }}</label>
+                <label for="form-participated" class="uk-form-label">{{ 'Participated?' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-status" class="uk-width-1-1" v-model="contract.participated">
+                    <select id="form-participated" class="uk-width-1-1" v-model="contract.participated">
                         <option v-for="(id, participated) in data.participations" :value="id">{{participated}}</option>
                     </select>
                 </div>
             </div>
 
             <div class="uk-form-row">
-                <label for="form-status" class="uk-form-label">{{ 'Visited multiple?' | trans }}</label>
+                <label for="form-visitedMultiple" class="uk-form-label">{{ 'Visited multiple?' | trans }}</label>
                 <div class="uk-form-controls">
                     <select id="form-visitedMultiple" class="uk-width-1-1" v-model="contract.visitedMultiple">
                         <option v-for="(id, visitedMultiple) in data.multipleVisits" :value="id">{{visitedMultiple}}</option>

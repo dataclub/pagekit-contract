@@ -39,11 +39,11 @@
             <thead>
             <tr>
                 <th class="pk-table-width-minimum"><input type="checkbox" v-check-all:selected.literal="input[name=id]" number></th>
-                <th colspan="2" v-order:name="config.filter.order">
+                <th colspan="1" v-order:name="config.filter.order">
                     {{ 'Contracts' | trans }}
                 </th>
                 <th class="pk-table-width-100 uk-text-center">
-                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status" :options="statusOptions"></input-filter>
+                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status_id" :options="statusOptions"></input-filter>
                 </th>
                 <th class="pk-table-width-100" v-order:date="config.filter.order">
                     {{ 'Date' | trans }}
@@ -71,30 +71,26 @@
             <tbody>
             <tr class="check-item" v-for="contract in contracts" :class="{'uk-active': active(contract)}">
                 <td><input type="checkbox" name="id" :value="contract.id"></td>
-                <td class="pk-table-width-minimum">
+                <!--td class="pk-table-width-minimum">
                     <img class="uk-img-preserve uk-border-circle" width="40" height="40">
-                </td>
+                </td-->
                 <td class="uk-text-nowrap">
                     <a :href="$url.route('admin/contract/edit', { id: contract.id })">{{ contract.name }}</a>
                     <div class="uk-text-muted">{{ contract.name }}</div>
                 </td>
                 <td class="uk-text-center">
-                    <a href="#" :title="contract.statusText" :class="{
-                            'pk-icon-circle-success': contract.date && contract.status,
-                            'pk-icon-circle-danger': !contract.status,
-                            'pk-icon-circle-primary': contract.status
-                        }" @click="toggleStatus(contract)"></a>
+                    <a :href="$url.route('admin/contract/statuses/edit', { id: contract.status_id })">{{ contract.state }}</a>
                 </td>
-                <td>
+                <td class="uk-text-left">
                     {{ $trans('%date%', { date: contract.date ? $date(contract.date) : $trans('Never') }) }}
                 </td>
-                <td>
+                <td class="uk-text-left">
                     {{ contract.place }}
-                </td>
-                <td>
+                </td >
+                <td class="uk-text-center">
                     {{ $trans('%date%', { date: contract.startDate ? $date(contract.startDate) : $trans('Never') }) }}
                 </td>
-                <td>
+                <td class="uk-text-center">
                     {{ $trans('%date%', { date: contract.cancellationDate ? $date(contract.cancellationDate) : $trans('Never') }) }}
                 </td>
                 <td class="uk-text-center">

@@ -38,8 +38,8 @@ window.Contract = {
 
         statusOptions: function () {
             console.log(this.$data);
-            var options = _.map(this.$data.statuses, function (status, id) {
-                return {text: status, value: id};
+            var options = _.map(this.$data.statuses, function (name, id) {
+                return {text: name, value: id};
             });
 
             return [{label: this.$trans('Filter by'), options: options}];

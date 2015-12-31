@@ -67,7 +67,7 @@ class Contract implements \JsonSerializable
     public $user;
 
     /**
-     * @HasMany(targetEntity="Status", keyFrom="id", keyTo="status_id")
+     * @BelongsTo(targetEntity="Pagekit\Contract\Model\Status", keyFrom="status_id")
      * @OrderBy({"id" = "DESC"})
      */
     public $status;
@@ -75,6 +75,7 @@ class Contract implements \JsonSerializable
     /** @var array */
     protected static $properties = [
         'author' => 'getAuthor',
+        'state' => 'getStatus',
     ];
 
     /**
@@ -89,7 +90,7 @@ class Contract implements \JsonSerializable
     {
         $statuses = self::getStatuses();
 
-        return isset($statuses[$this->status]) ? $statuses[$this->status] : __('Unknown');
+        return isset($statuses[$this->status_id]) ? $statuses[$this->status_id] : __('Unknown');
     }
 
     public function getAuthor()
@@ -97,26 +98,9 @@ class Contract implements \JsonSerializable
         return $this->user ? $this->user->username : null;
     }
 
-    /**
-     * Check if the user is active.
-     *
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->status == self::STATUS_ACTIVE;
+    public function getStatus(){
+        return $this->status ? $this->status->name : null;
     }
-
-    /**
-     * Check if the user is blocked.
-     *
-     * @return bool
-     */
-    public function isBlocked()
-    {
-        return $this->status == self::STATUS_BLOCKED;
-    }
-
 
     public function validate()
     {

@@ -79,8 +79,8 @@
 
 	    computed: {
 	        statusOptions: function () {
-	            var options = _.map(this.$data.statuses, function (status, id) {
-	                return {text: status, value: id};
+	            var options = _.map(this.$data.statuses, function (name, id) {
+	                return {text: name, value: id};
 	            });
 
 	            return [{label: this.$trans('Filter by'), options: options}];
@@ -131,12 +131,12 @@
 	            });
 	        },
 
-	        status: function (status) {
+	        status: function (name) {
 
 	            var contracts = this.getSelected();
 
 	            contracts.forEach(function (contract) {
-	                contract.status = status;
+	                contract.status_id = name;
 	            });
 
 	            this.resource.save({id: 'bulk'}, {contracts: contracts}).then(function () {
@@ -159,7 +159,7 @@
 	        },
 
 	        toggleStatus: function (contract) {
-	            contract.status = !!contract.status ? 0 : 1;
+	            contract.status_id = !!contract.status_id ? 0 : 1;
 	            this.save(contract);
 	        },
 	        toggleParticipation: function (contract) {

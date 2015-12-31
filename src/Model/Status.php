@@ -7,7 +7,7 @@ use Pagekit\Application as App;
 /**
  * @Entity(tableClass="@contract_status")
  */
-class Contract implements \JsonSerializable
+class Status implements \JsonSerializable
 {
     use ContractModelTrait;
 
@@ -17,6 +17,9 @@ class Contract implements \JsonSerializable
     /** @Column(type="string") */
     public $name;
 
+    /** @var array */
+    protected static $properties = [
+    ];
 
     /**
      * {@inheritdoc}
@@ -25,4 +28,5 @@ class Contract implements \JsonSerializable
     {
         return $this->id;
     }
+
 }
