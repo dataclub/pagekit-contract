@@ -14,7 +14,7 @@
             <div class="uk-form-row">
                 <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-status" class="uk-width-1-1" v-model="contract.status">
+                    <select id="form-status" class="uk-width-1-1" v-model="contract.status_id">
                         <option v-for="(id, status) in data.statuses" :value="id">{{status}}</option>
                     </select>
                 </div>

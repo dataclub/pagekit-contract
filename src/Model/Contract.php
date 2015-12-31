@@ -13,13 +13,6 @@ class Contract implements \JsonSerializable
     use ContractModelTrait;
 
     /**
-     * The blocked status.
-     *
-     * @var int
-     */
-    const STATUS_BLOCKED = 0;
-
-    /**
      * The active status.
      *
      * @var int
@@ -57,21 +50,27 @@ class Contract implements \JsonSerializable
     public $cancellationDate;
 
     /** @Column(type="integer") */
-    public $status = Contract::STATUS_ACTIVE;
+    public $status_id = Contract::STATUS_ACTIVE;
 
     /** @Column(type="integer") */
     public $user_id;
 
     /** @Column(type="integer") */
-    public $participated;
+    public $participated = Contract::NO;
     /** @Column(type="integer") */
-    public $visitedMultiple;
+    public $visitedMultiple = Contract::NO;
 
 
     /**
      * @BelongsTo(targetEntity="Pagekit\User\Model\User", keyFrom="user_id")
      */
     public $user;
+
+    /**
+     * @HasMany(targetEntity="Status", keyFrom="id", keyTo="status_id")
+     * @OrderBy({"id" = "DESC"})
+     */
+    public $status;
 
     /** @var array */
     protected static $properties = [

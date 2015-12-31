@@ -2,6 +2,7 @@
 
 namespace Pagekit\Contract\Model;
 
+use Pagekit\Application as App;
 use Pagekit\Database\ORM\ModelTrait;
 
 trait ContractModelTrait
@@ -34,10 +35,18 @@ trait ContractModelTrait
 
     public static function getStatuses()
     {
-        return [
-            self::STATUS_ACTIVE => __('Active'),
-            self::STATUS_BLOCKED => __('Blocked')
-        ];
+        $contract_status = App::db()->createQueryBuilder()
+        ->from('@contract_status')
+        ->execute('id, name')
+        ->fetchAll();
+
+        $statuses = [];
+        foreach($contract_status as $status){
+            $status = array_values($status);
+            $statuses[$status[0]] = $status[1];
+        }
+
+        return $statuses;
     }
 
     public static function getMultipleVisits(){
