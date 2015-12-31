@@ -32,7 +32,9 @@
     "Yes" => "Ja",
     "No" => "Nein",
     "Activate status" => "Status aktivieren",
-    "Block status" => "Status sperren"
+    "Block status" => "Status sperren",
+    "Contracts saved." => "Verträge gespeichert.",
+    "Contracts deleted." => "Verträge gelöscht.",
 );
 
 ?>

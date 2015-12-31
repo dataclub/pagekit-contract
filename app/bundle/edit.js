@@ -110,7 +110,7 @@
 	                this.$data.newCancellationDateValue = this.$data.oldCancellationDateValue == null ? new Date() : this.$data.oldCancellationDateValue;
 
 	                this.$set('contract', data.contract);
-	                this.$notify('Contract saved.');
+	                this.$notify(this.$trans('Contract saved.'));
 	            }, function (data) {
 	                this.$notify(data, 'danger');
 	            });

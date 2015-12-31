@@ -124,7 +124,7 @@
 	        save: function (contract) {
 	            this.resource.save({id: contract.id}, {contract: contract}).then(function () {
 	                this.load();
-	                this.$notify('Contracts saved.');
+	                this.$notify(this.$trans('Contracts saved.'));
 	            }, function (res) {
 	                this.load();
 	                this.$notify(res.data, 'danger');
@@ -141,7 +141,7 @@
 
 	            this.resource.save({id: 'bulk'}, {contracts: contracts}).then(function () {
 	                this.load();
-	                this.$notify('Contracts saved.');
+	                this.$notify(this.$trans('Contracts saved.'));
 	            }, function (res) {
 	                this.load();
 	                this.$notify(res.data, 'danger');
@@ -151,7 +151,7 @@
 	        remove: function () {
 	            this.resource.delete({id: 'bulk'}, {ids: this.selected}).then(function () {
 	                this.load();
-	                this.$notify('Contracts deleted.');
+	                this.$notify(this.$trans('Contracts deleted.'));
 	            }, function (res) {
 	                this.load();
 	                this.$notify(res.data, 'danger');
