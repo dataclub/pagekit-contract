@@ -36,9 +36,27 @@
             </div>
 
             <div class="uk-form-row">
+                <label for="form-status" class="uk-form-label">{{ 'Participated?' | trans }}</label>
+                <div class="uk-form-controls">
+                    <select id="form-status" class="uk-width-1-1" v-model="contract.participated">
+                        <option v-for="(id, participated) in data.participations" :value="id">{{participated}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="uk-form-row">
+                <label for="form-status" class="uk-form-label">{{ 'Visited multiple?' | trans }}</label>
+                <div class="uk-form-controls">
+                    <select id="form-visitedMultiple" class="uk-width-1-1" v-model="contract.visitedMultiple">
+                        <option v-for="(id, visitedMultiple) in data.multipleVisits" :value="id">{{visitedMultiple}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="uk-form-row">
                 <label for="form-start" class="uk-form-label">
                     {{ 'Start' | trans }}
-                    <a href="#" v-show="!editingStartdate" class="pk-icon-check pk-icon-hover" :title="'Change Startdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusStartdate(1)"></a>
+                    <a href="#" v-show="!editingStartdate" class="pk-icon-edit pk-icon-hover" :title="'Edit Startdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusStartdate(1)"></a>
                     <a href="#" :class="{'uk-hidden' : (!editingStartdate)}" class="pk-icon-block pk-icon-hover" :title="'Hide Startdate' | trans" data-uk-tooltip="{delay: 500}" @click="statusStartdate(0)"></a>
                 </label>
 
@@ -56,7 +74,7 @@
             <div class="uk-form-row">
                 <label for="form-cancellation" class="uk-form-label">
                     {{ 'Cancellation' | trans }}
-                    <a href="#" v-show="!editingCancellationdate" class="pk-icon-check pk-icon-hover" :title="'Change Cancellationdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusCancellationdate(1)"></a>
+                    <a href="#" v-show="!editingCancellationdate" class="pk-icon-edit pk-icon-hover" :title="'Edit Cancellationdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusCancellationdate(1)"></a>
                     <a href="#" :class="{'uk-hidden' : (!editingCancellationdate)}" class="pk-icon-block pk-icon-hover" :title="'Hide Cancellationdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusCancellationdate(0)"></a>
                 </label>
 

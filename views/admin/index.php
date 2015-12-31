@@ -12,8 +12,8 @@
 
                 <div class="uk-margin-left">
                     <ul class="uk-subnav pk-subnav-icon">
-                        <li><a class="pk-icon-check pk-icon-hover" :title="'Activate' | trans" data-uk-tooltip="{delay: 500}" @click="status(1)"></a></li>
-                        <li><a class="pk-icon-block pk-icon-hover" :title="'Block' | trans" data-uk-tooltip="{delay: 500}" @click="status(0)"></a></li>
+                        <li><a class="pk-icon-check pk-icon-hover" :title="'Activate status' | trans" data-uk-tooltip="{delay: 500}" @click="status(1)"></a></li>
+                        <li><a class="pk-icon-block pk-icon-hover" :title="'Block status' | trans" data-uk-tooltip="{delay: 500}" @click="status(0)"></a></li>
                         <li><a class="pk-icon-delete pk-icon-hover" :title="'Delete' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="remove" v-confirm="'Delete contracts?'"></a></li>
                     </ul>
                 </div>
@@ -58,6 +58,12 @@
                     {{ 'Cancellation' | trans }}
                 </th>
                 <th class="pk-table-width-100">
+                    <input-filter :title="$trans('Participated?')" :value.sync="config.filter.participated" :options="participations"></input-filter>
+                </th>
+                <th class="pk-table-width-100">
+                    <input-filter :title="$trans('Visited multiple?')" :value.sync="config.filter.visitedMultiple" :options="multipleVisits"></input-filter>
+                </th>
+                <th class="pk-table-width-100">
                     <input-filter :title="$trans('Author')" :value.sync="config.filter.author" :options="authors"></input-filter>
                 </th>
             </tr>
@@ -74,7 +80,7 @@
                 </td>
                 <td class="uk-text-center">
                     <a href="#" :title="contract.statusText" :class="{
-                            'pk-icon-circle-success': contract.login && user.status,
+                            'pk-icon-circle-success': contract.date && contract.status,
                             'pk-icon-circle-danger': !contract.status,
                             'pk-icon-circle-primary': contract.status
                         }" @click="toggleStatus(contract)"></a>
@@ -90,6 +96,20 @@
                 </td>
                 <td>
                     {{ $trans('%date%', { date: contract.cancellationDate ? $date(contract.cancellationDate) : $trans('Never') }) }}
+                </td>
+                <td class="uk-text-center">
+                    <a href="#" :class="{
+                            'pk-icon-circle-success': contract.date && contract.participated,
+                            'pk-icon-circle-danger': !contract.participated,
+                            'pk-icon-circle-primary': contract.participated
+                        }" @click="toggleParticipation(contract)"></a>
+                </td>
+                <td class="uk-text-center">
+                    <a href="#" :class="{
+                            'pk-icon-circle-success': contract.date && contract.visitedMultiple,
+                            'pk-icon-circle-danger': !contract.visitedMultiple,
+                            'pk-icon-circle-primary': contract.visitedMultiple
+                        }" @click="toggleMultipleVisit(contract)"></a>
                 </td>
                 <td>
                     <a :href="$url.route('admin/user/edit', { id: contract.user_id })">{{ contract.author }}</a>

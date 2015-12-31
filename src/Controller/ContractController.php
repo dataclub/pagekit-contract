@@ -59,6 +59,8 @@ class ContractController
             '$data' => [
                 'contract' => $contract,
                 'statuses' => Contract::getStatuses(),
+                'multipleVisits' => Contract::getMultipleVisits(),
+                'participations' => Contract::getParticipations(),
                 'config' => [
                     //'currentUser' => App::Contract()->id
                 ],

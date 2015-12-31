@@ -39,4 +39,18 @@ trait ContractModelTrait
             self::STATUS_BLOCKED => __('Blocked')
         ];
     }
+
+    public static function getMultipleVisits(){
+        return [
+            self::YES => __('Yes'),
+            self::NO => __('No')
+        ];
+    }
+
+    public static function getParticipations(){
+        return [
+            self::YES => __('Yes'),
+            self::NO => __('No')
+        ];
+    }
 }

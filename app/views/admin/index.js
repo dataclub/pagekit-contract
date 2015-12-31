@@ -98,19 +98,13 @@ module.exports = {
             contract.status = !!contract.status ? 0 : 1;
             this.save(contract);
         },
-
-        showVerified: function (contract) {
-            return this.config.emailVerification && contract.data.verified;
+        toggleParticipation: function (contract) {
+            contract.participated = !!contract.participated ? 0 : 1;
+            this.save(contract);
         },
-
-        showRoles: function (contract) {
-            return _.reduce(contract.roles, function (roles, id) {
-                var role = _.find(this.config.roles, 'id', id);
-                if (id !== 2 && role) {
-                    roles.push(role.name);
-                }
-                return roles;
-            }, [], this).join(', ');
+        toggleMultipleVisit: function (contract) {
+            contract.visitedMultiple = !!contract.visitedMultiple ? 0 : 1;
+            this.save(contract);
         },
 
         load: function (page) {

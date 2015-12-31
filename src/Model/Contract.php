@@ -12,18 +12,6 @@ class Contract implements \JsonSerializable
 {
     use ContractModelTrait;
 
-    /* Post draft status. */
-    const STATUS_DRAFT = 0;
-
-    /* Post pending review status. */
-    const STATUS_PENDING_REVIEW = 1;
-
-    /* Post published. */
-    const STATUS_PUBLISHED = 2;
-
-    /* Post unpublished. */
-    const STATUS_UNPUBLISHED = 3;
-
     /**
      * The blocked status.
      *
@@ -38,10 +26,22 @@ class Contract implements \JsonSerializable
      */
     const STATUS_ACTIVE = 1;
 
+    /**
+     *
+     * @var int
+     */
+    const NO = 0;
+
+    /**
+     *
+     * @var int
+     */
+    const YES = 1;
+
     /** @Column(type="integer") @Id */
     public $id;
 
-    /** @Column(type="string")  */
+    /** @Column(type="string") */
     public $name;
 
     /** @Column(type="datetime") */
@@ -62,6 +62,12 @@ class Contract implements \JsonSerializable
     /** @Column(type="integer") */
     public $user_id;
 
+    /** @Column(type="integer") */
+    public $participated;
+    /** @Column(type="integer") */
+    public $visitedMultiple;
+
+
     /**
      * @BelongsTo(targetEntity="Pagekit\User\Model\User", keyFrom="user_id")
      */
@@ -70,7 +76,7 @@ class Contract implements \JsonSerializable
     /** @var array */
     protected static $properties = [
         'author' => 'getAuthor',
-        ];
+    ];
 
     /**
      * {@inheritdoc}

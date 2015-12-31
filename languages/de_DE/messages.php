@@ -18,9 +18,21 @@
     "Never" => "Nie",
     "Contract saved." => "Verträge gespeichert.",
     "Contract deleted." => "Verträge gelöscht,",
-    "Change Startdate" => "Startdatum ändern",
     "No contracts found." => "Keine Verträge gefunden.",
-
+    "Show Startdate" => "Eingangsdatum anzeigen",
+    "Hide Startdate" => "Eingangsdatum verstecken",
+    "Edit Startdate" => "Eingangsdatum bearbeiten",
+    "Show Cancellationdate" => "Kündigungsdatum anzeigen",
+    "Hide Cancellationdate" => "Kündigungsdatum verstecken",
+    "Edit Cancellationdate" => "Kündigungsdatum bearbeiten",
+    "Show" => "Anzeigen",
+    "Hide" => "Verstecken",
+    "Participated?" => "Teilgenommen?",
+    "Visited multiple?" => "Mehrfach besucht?",
+    "Yes" => "Ja",
+    "No" => "Nein",
+    "Activate status" => "Status aktivieren",
+    "Block status" => "Status sperren"
 );
 
 ?>
