@@ -50,6 +50,15 @@ class ContractApiController
             $query->where(['status' => User::STATUS_ACTIVE]);
         }
 
+        if (is_numeric($participated)) {
+            $query->where(['participated' => (int) $participated]);
+
+        }
+
+        if (is_numeric($visitedMultiple)) {
+            $query->where(['visitedMultiple' => (int) $visitedMultiple]);
+        }
+
 
         if (preg_match('/^(date|name|place|startDate|cancellationDate)\s(asc|desc)$/i', $order, $match)) {
             $order = $match;

@@ -33,7 +33,6 @@ module.exports = {
 
     computed: {
         statusOptions: function () {
-
             var options = _.map(this.$data.statuses, function (status, id) {
                 return {text: status, value: id};
             });
@@ -49,6 +48,25 @@ module.exports = {
 
             return [{ label: this.$trans('Filter by'), options: options }];
         },
+
+        participations: function() {
+            console.log(this.$data);
+            var options = _.map(this.$data.participations, function (participated, id) {
+                return {text: participated, value: id};
+            });
+
+            return [{label: this.$trans('Filter by'), options: options}];
+        },
+
+        multipleVisits: function() {
+            var options = _.map(this.$data.multipleVisits, function (visitedMultiple, id) {
+                return {text: visitedMultiple, value: id};
+            });
+
+            return [{label: this.$trans('Filter by'), options: options}];
+        },
+
+
     },
 
     methods: {

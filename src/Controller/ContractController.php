@@ -26,6 +26,8 @@ class ContractController
             '$data' => [
                 'statuses' => Contract::getStatuses(),
                 'authors'  => Contract::getAuthors(),
+                'multipleVisits' => Contract::getMultipleVisits(),
+                'participations' => Contract::getParticipations(),
                 'config' => [
                     'filter' => $filter,
                     'page' => $page
