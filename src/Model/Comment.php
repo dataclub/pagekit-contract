@@ -43,7 +43,7 @@ class Comment extends BaseComment implements \JsonSerializable
     {
         $statuses = self::getStatuses();
 
-        return isset($statuses[$this->status]) ? $statuses[$this->status] : __('Unknown');
+        return isset($statuses[$this->status->name]) ? $statuses[$this->status->name] : __('Unknown');
     }
 
     public static function getStatuses()

@@ -43,7 +43,7 @@ trait ContractModelTrait
         $statuses = [];
         foreach($contract_status as $status){
             $status = array_values($status);
-            $statuses[$status[0]] = $status[1];
+            $statuses[$status[0]] = __($status[1]);;
         }
 
         return $statuses;

@@ -158,10 +158,6 @@
 	            });
 	        },
 
-	        toggleStatus: function (contract) {
-	            contract.status_id = !!contract.status_id ? 0 : 1;
-	            this.save(contract);
-	        },
 	        toggleParticipation: function (contract) {
 	            contract.participated = !!contract.participated ? 0 : 1;
 	            this.save(contract);

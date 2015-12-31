@@ -35,6 +35,10 @@
     "Block status" => "Status sperren",
     "Contracts saved." => "Verträge gespeichert.",
     "Contracts deleted." => "Verträge gelöscht.",
+
+    "Blocked" => "Gesperrt",
+    "Active" => "Aktiv",
+    "New" => "Neu"
 );
 
 ?>

@@ -39,7 +39,7 @@
             <thead>
             <tr>
                 <th class="pk-table-width-minimum"><input type="checkbox" v-check-all:selected.literal="input[name=id]" number></th>
-                <th colspan="1" v-order:name="config.filter.order">
+                <th colspan="" v-order:name="config.filter.order">
                     {{ 'Contracts' | trans }}
                 </th>
                 <th class="pk-table-width-100 uk-text-center">
@@ -79,7 +79,7 @@
                     <div class="uk-text-muted">{{ contract.name }}</div>
                 </td>
                 <td class="uk-text-center">
-                    <a :href="$url.route('admin/contract/statuses/edit', { id: contract.status_id })">{{ contract.state }}</a>
+                    <a :href="$url.route('admin/contract/statuses/edit', { id: contract.status_id })">{{ contract.state | trans }}</a>
                 </td>
                 <td class="uk-text-left">
                     {{ $trans('%date%', { date: contract.date ? $date(contract.date) : $trans('Never') }) }}

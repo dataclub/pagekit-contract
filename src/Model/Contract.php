@@ -90,7 +90,7 @@ class Contract implements \JsonSerializable
     {
         $statuses = self::getStatuses();
 
-        return isset($statuses[$this->status_id]) ? $statuses[$this->status_id] : __('Unknown');
+        return isset($statuses[$this->status->name]) ? $statuses[$this->status->name] : __('Unknown');
     }
 
     public function getAuthor()
