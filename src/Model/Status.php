@@ -28,5 +28,4 @@ class Status implements \JsonSerializable
     {
         return $this->id;
     }
-
 }

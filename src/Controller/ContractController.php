@@ -4,7 +4,6 @@ namespace Pagekit\Contract\Controller;
 
 use Pagekit\Application as App;
 use Pagekit\Contract\Model\Contract;
-use Pagekit\Contract\Model\Role;
 
 /**
  * @Access(admin=true)
@@ -21,7 +20,7 @@ class ContractController
         return [
             '$view' => [
                 'title' => __('Contracts'),
-                'name' => 'contract:views/admin/index.php'
+                'name' => 'contract:views/admin/contract-index.php'
             ],
             '$data' => [
                 'statuses' => Contract::getStatuses(),
@@ -56,7 +55,7 @@ class ContractController
         return [
             '$view' => [
                 'title' => $id ? __('Edit Contract') : __('Add Contract'),
-                'name' => 'contract/admin/edit.php'
+                'name' => 'contract/admin/contract-edit.php'
             ],
             '$data' => [
                 'contract' => $contract,
@@ -70,22 +69,52 @@ class ContractController
         ];
     }
 
-    public function accountsAction(){
-        return "partner View";
-    }
-
     public function companiesAction(){
         return "companies  View";
     }
 
+    /**
+     * @Access("contract: manage contracts")
+     * @Request({"filter": "array", "page":"int"})
+     */
     public function versionsAction()
     {
-        return "versions View";
+        return [
+            '$view' => [
+                'title' => __('Contracts'),
+                'name' => 'contract:views/admin/contract-index.php'
+            ],
+            '$data' => [
+                'statuses' => Contract::getStatuses(),
+                'authors'  => Contract::getAuthors(),
+                'multipleVisits' => Contract::getMultipleVisits(),
+                'participations' => Contract::getParticipations(),
+                'config' => [
+                    'filter' => $filter,
+                    'page' => $page
+                ]
+            ]
+        ];
     }
 
     public function statusesAction()
     {
-        return "status View";
+        return [
+            '$view' => [
+                'title' => __('Contracts'),
+                'name' => 'contract:views/admin/contract-status.php'
+            ],
+            '$data' => [
+                'statuses' => Contract::getStatuses(),
+                'authors'  => Contract::getAuthors(),
+                'multipleVisits' => Contract::getMultipleVisits(),
+                'participations' => Contract::getParticipations(),
+                'config' => [
+                    'filter' => $filter,
+                    'page' => $page
+                ]
+            ]
+        ];
     }
 
     public function commentsAction()

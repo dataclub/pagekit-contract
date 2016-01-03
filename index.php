@@ -33,12 +33,11 @@ return [
 
     ],
 
-    /*
+
     'resources' => [
         'views:contract' => 'views'
     ],
 
-    */
 
     /*
      * Define routes.
@@ -46,17 +45,16 @@ return [
     'routes' => [
 
         '/contract' => [
-            'name' => '@contract/admin',
+            'name' => '@contract',
             'controller' => [
                 'Pagekit\\Contract\\Controller\\ContractController'
             ]
         ],
-        '/contract: contract' => [
-            'label' => 'List',
-            'parent' => 'contract',
-            'url' => '@contract',
-            'active' => '@contract(/edit)?',
-            'access' => 'contract: manage contracts',
+        '/contract/accounts' => [
+            'name' => '@contract/accounts',
+            'controller' => [
+                'Pagekit\\Contract\\Controller\\AccountsController'
+            ]
         ],
         '/api/contract' => [
             'name' => '@contract/api',
@@ -64,7 +62,12 @@ return [
                 'Pagekit\\Contract\\Controller\\ContractApiController'
             ]
         ],
-
+        '/api/contract/accounts' => [
+            'name' => '@contract/api/accounts',
+            'controller' => [
+                'Pagekit\\Contract\\Controller\\AccountsApiController'
+            ]
+        ],
     ],
     'main' => 'Pagekit\\Contract\\ContractModule',
 
@@ -76,7 +79,7 @@ return [
         'contract' => [
             'label' => 'Contract',
             'icon' => 'contract:contract.svg',
-            'url' => '@contract/admin',
+            'url' => '@contract',
             'active' => '@contract*',
             'access' => 'contract: manage own contracts || contract: manage all contracts || contract: manage contract comments || system: manage settings',
             'priority' => 110
@@ -88,16 +91,17 @@ return [
             'parent' => 'contract',
 
             // See above
-            'label' => 'Verträge',
+            'label' => 'Contracts',
             'icon' => 'contract:contract.svg',
-            'url' => '@contract/admin'
+            'url' => '@contract'
             // 'access' => 'contract: manage contract'
         ],
 
         'contract: accounts' => [
             'parent' => 'contract',
             'label' => 'Accounts',
-            'url' => '@contract/admin/accounts'
+            'url' => '@contract/accounts',
+            'icon' => 'contract:contract.svg',
         ],
         'contract: companies' => [
             'parent' => 'contract',
@@ -146,28 +150,40 @@ return [
             'title' => 'Manage contract'
         ],
         'contract: manage settings' => [
-            'title' => 'Manage settings'
+            'title' => 'Manage contract-settings'
         ],
         'contract: manage all contracts' => [
-            'title' => 'Manage all posts',
+            'title' => 'Manage all contract-posts',
             'description' => 'Create, edit, delete and publish posts by all users'
         ],
         'contract: manage own contracts' => [
-            'title' => 'Manage own posts',
+            'title' => 'Manage own contract-posts',
             'description' => 'Create, edit, delete and publish own posts'
         ],
         'contract: manage contract comments' => [
-            'title' => 'Manage contract comments',
+            'title' => 'Manage contract contract-comments',
             'description' => 'Create, edit, delete and publish contract comments'
         ],
 
+
+        'accounts: manage account'  => [
+            'title' => 'Manage account'
+        ],
+        'accounts: manage all accounts' => [
+            'title' => 'Manage all account-posts',
+            'description' => 'Create, edit, delete and publish posts by all users'
+        ],
+        'accounts: manage own accounts' => [
+            'title' => 'Manage own account-posts',
+            'description' => 'Create, edit, delete and publish own posts'
+        ],
 
     ],
 
     /*
      * Link to a settings screen from the extensions listing.
      */
-    'settings' => '@contract/admin/settings',
+    'settings' => '@contract/settings',
 
     /*
      * Default module configuration.
@@ -178,6 +194,7 @@ return [
         'registration' => 'admin',
         'require_verification' => true,
         'contracts_per_page' => 20,
+        'accounts_per_page' => 20,
 
         'auth' => [
             'refresh_token' => false
@@ -197,14 +214,14 @@ return [
             );
         },
 
+        'view.styles' => function ($event, $styles) {
+            $styles->register('contract-settings', 'blog:app/assets/css/contract.css');
+        },
         'view.scripts' => function ($event, $scripts) {
-/*
-            $scripts->register('contract-settings', 'contract:app/bundle/settings.js', '~extensions');
-            $scripts->register('contract-site', 'contract:app/bundle/site.js', '~site-edit');
-            $scripts->register('contract-link', 'contract:app/bundle/link.js', '~panel-link');
-*/
+               //$scripts->register('contract-settings', 'contract:app/bundle/contract-settings.js', '~panel-link');
+
         }
 
-    ]
+    ],
 
 ];

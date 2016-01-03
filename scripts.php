@@ -46,6 +46,27 @@ return [
         }
 
         /**
+         *  Contract_Partner-Table
+         */
+        if ($util->tableExists('@contract_accounts') === false) {
+            $util->createTable('@contract_accounts', function ($table) {
+                $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
+                $table->addColumn('date', 'datetime', ['notnull' => true]);
+                $table->addColumn('first_name', 'string', ['length' => 255]);
+                $table->addColumn('last_name', 'string', ['length' => 255]);
+                $table->addColumn('phone', 'string', ['length' => 255]);
+                $table->addColumn('mobile', 'string', ['length' => 255]);
+                $table->addColumn('postal_code', 'string', ['length' => 255]);
+                $table->addColumn('city', 'string', ['length' => 255]);
+                $table->addColumn('street', 'string', ['length' => 255]);
+
+                $table->addColumn('customer_number', 'string', ['length' => 255]);
+                $table->setPrimaryKey(['id']);
+                $table->addUniqueIndex(['customer_number'], 'CONTRACT_PARTNER_CUSTOMER_NUMBER');
+            });
+        }
+
+        /**
          *  Contract_Comments-Table
          */
         if ($util->tableExists('@contract_comments') === false) {
@@ -94,25 +115,7 @@ return [
             });
         }
 
-        /**
-         *  Contract_Partner-Table
-         */
-        if ($util->tableExists('@contract_accounts') === false) {
-            $util->createTable('@contract_accounts', function ($table) {
-                $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
-                $table->addColumn('first_name', 'string', ['length' => 255]);
-                $table->addColumn('last_name', 'string', ['length' => 255]);
-                $table->addColumn('phone', 'string', ['length' => 255]);
-                $table->addColumn('mobile', 'string', ['length' => 255]);
-                $table->addColumn('postal_code', 'string', ['length' => 255]);
-                $table->addColumn('city', 'string', ['length' => 255]);
-                $table->addColumn('street', 'string', ['length' => 255]);
 
-                $table->addColumn('customer_number', 'string', ['length' => 255]);
-                $table->setPrimaryKey(['id']);
-                $table->addUniqueIndex(['customer_number'], 'CONTRACT_PARTNER_CUSTOMER_NUMBER');
-            });
-        }
 
     },
 

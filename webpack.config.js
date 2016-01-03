@@ -2,11 +2,14 @@ module.exports = [
 
     {
         entry: {
-            "settings": "./app/components/settings.vue",
+            "contract-settings": "./app/components/contract-settings.vue",
             "site": "./app/components/site.vue",
             "link": "./app/components/link.vue",
-            "index": "./app/views/admin/index",
-            "edit": "./app/views/admin/edit"
+            "contract-index": "./app/views/admin/contract-index",
+            "contract-edit": "./app/views/admin/contract-edit",
+            "accounts-index": "./app/views/admin/accounts-index",
+            "contract-version": "./app/views/admin/contract-version",
+            "contract-status": "./app/views/admin/contract-status"
         },
         output: {
             filename: "./app/bundle/[name].js"

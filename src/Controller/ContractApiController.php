@@ -19,13 +19,9 @@ class ContractApiController
     public function indexAction($filter = [], $page = 0, $limit = 0)
     {
         $query  = Contract::query();
-        $filter = array_merge(array_fill_keys(['status_id', 'search', 'order'], ''), $filter);
-        extract($filter, EXTR_SKIP);
+        $filter = array_merge(array_fill_keys(['status', 'search', 'author', 'limit'], ''), $filter);
 
-        $author = false;
-        if(!App::user()->hasAccess('contract: manage all contracts')) {
-            $author = App::user()->id;
-        }
+        extract($filter, EXTR_SKIP);
 
         if ($author) {
             $query->where(function ($query) use ($author) {
