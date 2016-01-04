@@ -68,7 +68,7 @@ window.Contract = {
             }, function (data) {
                 this.$notify(data, 'danger');
             });
-        },
+        }
     },
 
     components: {

@@ -55,7 +55,7 @@
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
 	  if (!hotAPI.compatible) return
-	  var id = "/Users/dataclub/public_html/pagekit/packages/pagekit/contract/app/components/site.vue"
+	  var id = "/home/dataclub/public_html/pagekit/packages/pagekit/pagekit-contract/app/components/site.vue"
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {

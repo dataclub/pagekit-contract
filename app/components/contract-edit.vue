@@ -6,9 +6,8 @@
             <div class="uk-form-row">
                 <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
                 <div class="uk-form-controls">
-                    <input id="form-name" class="uk-width-1-2" type="text" name="name" v-model="contract.name" v-validate:required>
-                    <a href="#" v-show="!editingName" class="fa fa-random fa-2x uk-width-1-4" :title="'Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="getRandom()"></a>
-
+                    <input id="form-name" class="uk-width-1-2" type="text" name="name" v-model="contract.name" v-validate:required >
+                    <a href="#" v-show="editingName || form.name.invalid" class="fa fa-random fa-2x uk-width-1-4" :title="'Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="getRandom('form-name', 'name', form.name)"></a>
                     <p class="uk-form-help-block uk-text-danger" v-show="form.name.invalid">{{ 'Name cannot be blank.' | trans }}</p>
                 </div>
             </div>
@@ -19,6 +18,15 @@
                     <select id="form-status" class="uk-width-1-2" v-model="contract.status_id">
                         <option v-for="(id, name) in data.statuses" :value="id">{{name}}</option>
                     </select>
+                </div>
+                <div class="uk-form-controls uk-form-controls-text" v-show="!editingStatus">
+                     <a href="#" class="fa fa-plus fa-2x uk-width-1-4" :title="'Add field' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="setStatusField(1)"></a>
+                </div>
+                <div class="uk-form-controls" :class="{'uk-hidden' : (!editingStatus)}">
+                    <div class="uk-form-status">
+                        <input id="form-status-add" type="text" name="status-add">
+                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="saveStatus()"></a>
+                    </div>
                 </div>
             </div>
 
@@ -129,12 +137,17 @@
                 oldStartDateValue: startDate,
                 newCancellationDateValue: data.cancellationDate,
                 oldCancellationDateValue: cancellationDate,
-                editingName: data.name ? true : false,
+                editingName: data.name == null,
+                editingStatus: false,
             }
         },
 
         ready: function () {
             UIkit.init(this.$el);
+
+            String.prototype.capitalize = function() {
+                return this.charAt(0).toUpperCase() + this.slice(1);
+            }
         },
         methods: {
             statusStartdate: function (value) {
@@ -156,11 +169,36 @@
                     this.$data.newCancellationDateValue = this.contract.cancellationDate;
                 }
             },
-            getRandom: function(){
-                this.contract.name = "a";
-                this.$data.editingName = true;
-            }
+            getRandom: function(elementID, elementName, formElement){
+                var editingField = 'editing'+ elementName.capitalize();
+                if($('#'+elementID)){
+                    $('#'+elementID)[0].value = "random";
+                    this.$data[editingField] = false;
+                    formElement.valid = true;
+                    formElement.invalid = false;
+                }
+            },
+            setStatusField: function (value) {
+                this.$data.editingStatus = value;
+            },
+            saveStatus: function () {
+                var value = $('#form-status-add')[0].value;
 
+                var data = {contract: this.$data.contract, id: this.$data.contract.id};
+
+                this.$broadcast('save', data);
+
+                this.resource.save({id: this.contract.id}, data, function (data) {
+                    if (!this.contract.id) {
+                        window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
+                    }
+
+                    this.$set('contract', data.contract);
+                    this.$notify(this.$trans('Contract saved.'));
+                }, function (data) {
+                    this.$notify(data, 'danger');
+                });
+            }
         },
 
         computed: {
