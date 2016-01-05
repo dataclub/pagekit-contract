@@ -5,11 +5,11 @@ namespace Pagekit\Contract\Model;
 use Pagekit\Application as App;
 
 /**
- * @Entity(tableClass="@contract_status")
+ * @Entity(tableClass="@contract_versions")
  */
-class Status implements \JsonSerializable
+class Version implements \JsonSerializable
 {
-    use StatusModelTrait;
+    use VersionModelTrait;
 
     /** @Column(type="integer") @Id */
     public $id;

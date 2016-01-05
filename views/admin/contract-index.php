@@ -45,6 +45,9 @@
                 <th class="pk-table-width-100 uk-text-center">
                     <input-filter :title="$trans('Status')" :value.sync="config.filter.status_id" :options="statusOptions"></input-filter>
                 </th>
+                <th class="pk-table-width-100 uk-text-center">
+                    <input-filter :title="$trans('Version')" :value.sync="config.filter.version_id" :options="versionOptions"></input-filter>
+                </th>
                 <th class="pk-table-width-100" v-order:place="config.filter.order">
                     {{ 'Place' | trans }}
                 </th>
@@ -77,6 +80,9 @@
                 </td>
                 <td class="uk-text-center">
                     <a :href="$url.route('admin/contract/statuses/edit', { id: contract.status_id })">{{ contract.state | trans }}</a>
+                </td>
+                <td class="uk-text-center">
+                    <a :href="$url.route('admin/contract/versions/edit', { id: contract.version_id })">{{ contract.release | trans }}</a>
                 </td>
                 <td class="uk-text-left">
                     {{ contract.place }}

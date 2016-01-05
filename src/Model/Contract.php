@@ -47,6 +47,9 @@ class Contract implements \JsonSerializable
     public $status_id;
 
     /** @Column(type="integer") */
+    public $version_id;
+
+    /** @Column(type="integer") */
     public $user_id;
 
     /** @Column(type="integer") */
@@ -66,10 +69,17 @@ class Contract implements \JsonSerializable
      */
     public $status;
 
+    /**
+     * @BelongsTo(targetEntity="Pagekit\Contract\Model\Version", keyFrom="version_id")
+     * @OrderBy({"id" = "DESC"})
+     */
+    public $version;
+
     /** @var array */
     protected static $properties = [
         'author' => 'getAuthor',
         'state' => 'getStatus',
+        'release' => 'getVersion',
     ];
 
     /**
@@ -86,6 +96,12 @@ class Contract implements \JsonSerializable
         return isset($statuses[$this->status->name]) ? $statuses[$this->status->name] : __('Unknown');
     }
 
+    public function getVersionText()
+    {
+        $versions = Version::getVersions();
+        return isset($versions[$this->version->name]) ? $versions[$this->version->name] : __('Unknown');
+    }
+
     public function getAuthor()
     {
         return $this->user ? $this->user->username : null;
@@ -93,6 +109,10 @@ class Contract implements \JsonSerializable
 
     public function getStatus(){
         return $this->status ? $this->status->name : null;
+    }
+
+    public function getVersion(){
+        return $this->version ? $this->version->name : null;
     }
 
     public function validate()
@@ -108,6 +128,15 @@ class Contract implements \JsonSerializable
         if (empty($this->date)) {
             throw new Exception(__('Date required.'));
         }
+
+        if (empty($this->status_id)) {
+            throw new Exception(__('Status required.'));
+        }
+
+        if (empty($this->version_id)) {
+            throw new Exception(__('Version required.'));
+        }
+
 
         return true;
     }

@@ -33,6 +33,24 @@
             </div>
 
             <div class="uk-form-row">
+                <label for="form-version" class="uk-form-label">{{ 'Version' | trans }}</label>
+                <div class="uk-form-controls">
+                    <select id="form-version" name="version" class="uk-width-1-2" v-model="contract.version_id">
+                        <option v-for="(id, name) in data.versions" :value="id">{{name}}</option>
+                    </select>
+                </div>
+                <div class="uk-form-controls uk-form-controls-text" v-show="!editingVersion">
+                     <a href="#" class="fa fa-plus fa-2x uk-width-1-4" :title="'Add field' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="setVersionField(1)"></a>
+                </div>
+                <div class="uk-form-controls" :class="{'uk-hidden' : (!editingVersion)}">
+                    <div class="uk-form-version">
+                        <input id="form-version-add" type="text" name="version-add">
+                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="addVersionValue()"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="uk-form-row">
                 <label for="form-place" class="uk-form-label">{{ 'Place' | trans }}</label>
                 <div class="uk-form-controls">
                     <input id="form-place" class="uk-form-width-large" type="text" name="place" v-model="contract.place" v-validate:required>
@@ -140,7 +158,9 @@
                 newCancellationDateValue: data.cancellationDate,
                 oldCancellationDateValue: cancellationDate,
                 editingName: data.name == null,
+
                 editingStatus: false,
+                editingVersion: false,
             }
         },
         created: function () {
@@ -202,12 +222,19 @@
             setStatusField: function (value) {
                 this.$data.editingStatus = value;
             },
+            setVersionField: function (value) {
+                this.$data.editingVersion = value;
+            },
             addStatusValue: function () {
                 var value = $('#form-status-add')[0].value;
                 this.saveStatus(value);
             },
+            addVersionValue: function () {
+                var value = $('#form-version-add')[0].value;
+                this.saveVersion(value);
+            },
             saveStatus: function (value) {
-                var data = {id: this.contract.id, status: value};
+                var data = {contract: this.contract, id: this.contract.id, status: value};
 
                 this.$broadcast('statusSave', data);
 
@@ -223,11 +250,28 @@
                 }, function (data) {
                     this.$notify(data, 'danger');
                 });
+            },
+            saveVersion: function (value) {
+                var data = {contract: this.contract, id: this.contract.id, version: value};
+
+                this.$broadcast('versionSave', data);
+
+                this.resource.save({id: 'version'}, data, function (data) {
+                    if (!this.contract.id) {
+                        window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
+                    }
+
+                    this.data.versions = data.versions;
+                    this.$set('contract', data.contract);
+
+                    this.$notify(this.$trans('Versions saved.'));
+                }, function (data) {
+                    this.$notify(data, 'danger');
+                });
             }
         },
 
-        computed: {
-        },
+        computed: {},
 
         events: {
             save: function (data) {

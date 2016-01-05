@@ -85,7 +85,7 @@ return [
         if ($util->tableExists('@contract_versions') === false) {
             $util->createTable('@contract_versions', function ($table) {
                 $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
-                $table->addColumn('Name', 'string', ['length' => 255]);
+                $table->addColumn('name', 'string', ['length' => 255]);
 
                 $table->setPrimaryKey(['id']);
             });

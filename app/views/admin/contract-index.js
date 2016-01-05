@@ -40,6 +40,14 @@ module.exports = {
             return [{label: this.$trans('Filter by'), options: options}];
         },
 
+        versionOptions: function(){
+            var options = _.map(this.$data.versions, function (name, id) {
+                return {text: name, value: id};
+            });
+
+            return [{label: this.$trans('Filter by'), options: options}];
+        },
+
         authors: function() {
             var options = _.map(this.$data.authors, function (author) {
 

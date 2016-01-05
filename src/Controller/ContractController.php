@@ -5,7 +5,7 @@ namespace Pagekit\Contract\Controller;
 use Pagekit\Application as App;
 use Pagekit\Contract\Model\Contract;
 use Pagekit\Contract\Model\Status;
-
+use Pagekit\Contract\Model\Version;
 /**
  * @Access(admin=true)
  */
@@ -25,6 +25,7 @@ class ContractController
             ],
             '$data' => [
                 'statuses' => Status::getStatuses(),
+                'versions' => Version::getVersions(),
                 'authors'  => Contract::getAuthors(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),
@@ -45,11 +46,11 @@ class ContractController
     public function editAction($id = 0)
     {
         if (!$id) {
-            $contract = Contract::create();
-
+            $contract = Contract::create(['date' => new \DateTime(), 'status_id' => Status::getFirstStatus(), 'version_id' => Version::getFirstVersion()]);
         } else if (!$contract = Contract::find($id)) {
             App::abort(404, 'Contract not found.');
         }
+
 
         return [
             '$view' => [
@@ -59,61 +60,16 @@ class ContractController
             '$data' => [
                 'contract' => $contract,
                 'statuses' => Status::getStatuses(),
+                'versions' => Version::getVersions(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),
-                'config' => [
-                    //'currentUser' => App::Contract()->id
-                ],
+                'config' => [],
             ],
         ];
     }
 
     public function companiesAction(){
         return "companies  View";
-    }
-
-    /**
-     * @Access("contract: manage contracts")
-     * @Request({"filter": "array", "page":"int"})
-     */
-    public function versionsAction()
-    {
-        return [
-            '$view' => [
-                'title' => __('Contracts'),
-                'name' => 'contract:views/admin/contract-index.php'
-            ],
-            '$data' => [
-                'statuses' => Status::getStatuses(),
-                'authors'  => Contract::getAuthors(),
-                'multipleVisits' => Contract::getMultipleVisits(),
-                'participations' => Contract::getParticipations(),
-                'config' => [
-                    'filter' => $filter,
-                    'page' => $page
-                ]
-            ]
-        ];
-    }
-
-    public function statusesAction()
-    {
-        return [
-            '$view' => [
-                'title' => __('Contracts'),
-                'name' => 'contract:views/admin/contract-status.php'
-            ],
-            '$data' => [
-                'statuses' => Status::getStatuses(),
-                'authors'  => Contract::getAuthors(),
-                'multipleVisits' => Contract::getMultipleVisits(),
-                'participations' => Contract::getParticipations(),
-                'config' => [
-                    'filter' => $filter,
-                    'page' => $page
-                ]
-            ]
-        ];
     }
 
     public function commentsAction()

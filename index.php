@@ -109,19 +109,6 @@ return [
             'url' => '@contract/admin/companies'
         ],
 
-        'contract: versions' => [
-            'parent' => 'contract',
-            'label' => 'Versions',
-            'url' => '@contract/admin/versions'
-        ],
-
-
-        'contract: statuses' => [
-            'parent' => 'contract',
-            'label' => 'Statuses',
-            'url' => '@contract/admin/statuses'
-        ],
-
         'contract: comments' => [
             'parent' => 'contract',
             'label' => 'Comments',

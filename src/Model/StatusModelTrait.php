@@ -12,7 +12,7 @@ trait StatusModelTrait
     /**
      * @Saved
      */
-    public static function saved($event, Contract $contract)
+    public static function saved($event, Status $status)
     {
         $bla = "";
     }
@@ -34,8 +34,8 @@ trait StatusModelTrait
     }
 
     /**
-     * Insert new added statuses to the contracts_status-table
-     * @param array $status
+     * Insert new added statuses to the contract_status-table
+     * @param string $status
      */
     public static function setStatus($value){
         $statuses = self::getStatuses();
