@@ -7,7 +7,9 @@
                 <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
                 <div class="uk-form-controls">
                     <input id="form-name" class="uk-width-1-2" type="text" name="name" v-model="contract.name" v-validate:required >
-                    <a href="#" v-show="editingName || form.name.invalid" class="fa fa-random fa-2x uk-width-1-4" :title="'Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="getRandom('form-name', 'name', form.name)"></a>
+                    <a href="#" v-show="editingName || form.name.invalid" class="fa fa-refresh fa-2x uk-width-1-4" :title="'Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="getRandom('form-name', 'name', form.name)"></a>
+                    <a href="#" v-show="!editingName && !form.name.invalid" class="fa fa-remove fa-2x uk-width-1-4" :title="'Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="clearRandom('form-name', 'name', form.name)"></a>
+
                     <p class="uk-form-help-block uk-text-danger" v-show="form.name.invalid">{{ 'Name cannot be blank.' | trans }}</p>
                 </div>
             </div>
@@ -15,7 +17,7 @@
             <div class="uk-form-row">
                 <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-status" class="uk-width-1-2" v-model="contract.status_id">
+                    <select id="form-status" name="status" class="uk-width-1-2" v-model="contract.status_id">
                         <option v-for="(id, name) in data.statuses" :value="id">{{name}}</option>
                     </select>
                 </div>
@@ -25,7 +27,7 @@
                 <div class="uk-form-controls" :class="{'uk-hidden' : (!editingStatus)}">
                     <div class="uk-form-status">
                         <input id="form-status-add" type="text" name="status-add">
-                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="saveStatus()"></a>
+                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="addStatusValue()"></a>
                     </div>
                 </div>
             </div>
@@ -141,7 +143,9 @@
                 editingStatus: false,
             }
         },
-
+        created: function () {
+            this.resource = this.$resource('api/contract/:id');
+        },
         ready: function () {
             UIkit.init(this.$el);
 
@@ -170,31 +174,52 @@
                 }
             },
             getRandom: function(elementID, elementName, formElement){
-                var editingField = 'editing'+ elementName.capitalize();
                 if($('#'+elementID)){
-                    $('#'+elementID)[0].value = "random";
-                    this.$data[editingField] = false;
-                    formElement.valid = true;
-                    formElement.invalid = false;
+                    var data = {contract: this.contract, id: this.contract.id};
+                    this.$broadcast('getRandom', data);
+                    this.resource.save({id: 'random'}, data, function (data) {
+                        var editingField = 'editing'+ elementName.capitalize();
+                        this.$data[editingField] = false;
+                        formElement.valid = true;
+                        formElement.invalid = false;
+
+                        this.$set('contract', data.contract);
+                        this.$notify(this.$trans('Random-value set.'));
+                    }, function (data) {
+                        this.$notify(data, 'danger');
+                    });
+                }
+            },
+            clearRandom: function(elementID, elementName, formElement){
+                if($('#'+elementID)){
+                    var editingField = 'editing'+ elementName.capitalize();
+                    this.$data[editingField] = true;
+                    formElement.valid = false;
+                    formElement.invalid = true;
+                    this.contract.name = "";
                 }
             },
             setStatusField: function (value) {
                 this.$data.editingStatus = value;
             },
-            saveStatus: function () {
+            addStatusValue: function () {
                 var value = $('#form-status-add')[0].value;
+                this.saveStatus(value);
+            },
+            saveStatus: function (value) {
+                var data = {id: this.contract.id, status: value};
 
-                var data = {contract: this.$data.contract, id: this.$data.contract.id};
+                this.$broadcast('statusSave', data);
 
-                this.$broadcast('save', data);
-
-                this.resource.save({id: this.contract.id}, data, function (data) {
+                this.resource.save({id: 'status'}, data, function (data) {
                     if (!this.contract.id) {
                         window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
                     }
 
+                    this.data.statuses = data.statuses;
                     this.$set('contract', data.contract);
-                    this.$notify(this.$trans('Contract saved.'));
+
+                    this.$notify(this.$trans('Statuses saved.'));
                 }, function (data) {
                     this.$notify(data, 'danger');
                 });

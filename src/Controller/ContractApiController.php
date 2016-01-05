@@ -4,6 +4,7 @@ namespace Pagekit\Contract\Controller;
 
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
+use Pagekit\Contract\Model\Status;
 use Pagekit\User\Model\User;
 use Pagekit\Contract\Model\Contract;
 
@@ -123,15 +124,13 @@ class ContractApiController
             $contract->name = @$data['name'];
             $contract->place = @$data['place'];
 
-            $self = App::contract()->id == $contract->id;
-
             // user without universal access can only edit their own posts
             if(!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
                 return ['error' => __('Access denied.')];
             }
 
             // user without universal access is not allowed to assign posts to other users
-            if(App::user()->hasAccess('contract: manage all posts')) {
+            if(App::user()->hasAccess('contract: manage all contracts')) {
                 $data['user_id'] = App::user()->id;
             }
 
@@ -147,6 +146,76 @@ class ContractApiController
         }
     }
 
+    /**
+     * @Route("/status", methods="POST")
+     * @Request({"id": "int", "status": "string"}, csrf=true)
+     */
+    public function statusSaveAction($id = 0, $status = null)
+    {
+        try {
+            if (!$contract = Contract::find($id)) {
+                if ($id) {
+                    App::abort(404, __('Contract not found.'));
+                }
+            }
+
+            // user without universal access can only edit their own posts
+            if(!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
+                return ['error' => __('Access denied.')];
+            }
+
+            if($status != null){
+                $statusID = Status::setStatus($status);
+                if($statusID){
+                    $contract->status_id = $statusID;
+                }
+            }
+
+            return [
+                'message' => 'success',
+                'contract' => $contract,
+                'statuses' => Status::getStatuses()
+            ];
+
+        } catch (Exception $e) {
+            App::abort(400, $e->getMessage());
+        }
+    }
+
+    /**
+     * @Route("/random", methods="POST")
+     * @Request({"contract": "array", "id": "int"}, csrf=true)
+     */
+    public function getRandomAction($data, $id = 0)
+    {
+        try {
+            if (!$contract = Contract::find($id)) {
+
+                if ($id) {
+                    App::abort(404, __('Contract not found.'));
+                }
+
+                $data['date'] = new \DateTime;
+                $status_id = Status::getFirstStatus();
+                $contract = Contract::create(['date' => $data['date'], 'status_id' => $status_id]);
+            }
+
+            // user without universal access can only edit their own posts
+            if(!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
+                return ['error' => __('Access denied.')];
+            }
+
+            $contract->name = Contract::getRandomID();
+
+            return [
+                'message' => 'success',
+                'contract' => $contract,
+            ];
+
+        } catch (Exception $e) {
+            App::abort(400, $e->getMessage());
+        }
+    }
     /**
      * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
      * @Request({"id": "int"}, csrf=true)

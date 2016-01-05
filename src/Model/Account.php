@@ -4,7 +4,7 @@ namespace Pagekit\Contract\Model;
 
 use Pagekit\Application as App;
 use Pagekit\User\Model\User;
-
+use Pagekit\Contract\Model\Status;
 /**
  * @Entity(tableClass="@contract_accounts")
  */

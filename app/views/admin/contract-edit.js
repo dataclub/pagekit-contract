@@ -43,10 +43,9 @@ window.Contract = {
             });
 
             return [{label: this.$trans('Filter by'), options: options}];
-        },
+        }
     },
     methods: {
-
         save: function () {
             var data = {contract: this.contract, id: this.contract.id};
 

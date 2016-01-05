@@ -4,6 +4,7 @@ namespace Pagekit\Contract\Controller;
 
 use Pagekit\Application as App;
 use Pagekit\Contract\Model\Contract;
+use Pagekit\Contract\Model\Status;
 
 /**
  * @Access(admin=true)
@@ -55,7 +56,7 @@ class AccountsController
             ],
             '$data' => [
                 'contract' => $contract,
-                'statuses' => Contract::getStatuses(),
+                'statuses' => Status::getStatuses(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),
                 'config' => [
@@ -85,7 +86,7 @@ class AccountsController
                 'name' => 'contract:views/admin/contract-index.php'
             ],
             '$data' => [
-                'statuses' => Contract::getStatuses(),
+                'statuses' => Status::getStatuses(),
                 'authors'  => Contract::getAuthors(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),
@@ -105,7 +106,7 @@ class AccountsController
                 'name' => 'contract:views/admin/contract-status.php'
             ],
             '$data' => [
-                'statuses' => Contract::getStatuses(),
+                'statuses' => Status::getStatuses(),
                 'authors'  => Contract::getAuthors(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),

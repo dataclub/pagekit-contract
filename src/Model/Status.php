@@ -9,7 +9,7 @@ use Pagekit\Application as App;
  */
 class Status implements \JsonSerializable
 {
-    use ContractModelTrait;
+    use StatusModelTrait;
 
     /** @Column(type="integer") @Id */
     public $id;

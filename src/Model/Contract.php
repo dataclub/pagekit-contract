@@ -4,6 +4,7 @@ namespace Pagekit\Contract\Model;
 
 use Pagekit\Application as App;
 use Pagekit\User\Model\User;
+use Pagekit\Contract\Model\Status;
 
 /**
  * @Entity(tableClass="@contracts")
@@ -11,13 +12,6 @@ use Pagekit\User\Model\User;
 class Contract implements \JsonSerializable
 {
     use ContractModelTrait;
-
-    /**
-     * The active status.
-     *
-     * @var int
-     */
-    const STATUS_ACTIVE = 1;
 
     /**
      *
@@ -50,7 +44,7 @@ class Contract implements \JsonSerializable
     public $cancellationDate;
 
     /** @Column(type="integer") */
-    public $status_id = Contract::STATUS_ACTIVE;
+    public $status_id;
 
     /** @Column(type="integer") */
     public $user_id;
@@ -88,8 +82,7 @@ class Contract implements \JsonSerializable
 
     public function getStatusText()
     {
-        $statuses = self::getStatuses();
-
+        $statuses = Status::getStatuses();
         return isset($statuses[$this->status->name]) ? $statuses[$this->status->name] : __('Unknown');
     }
 

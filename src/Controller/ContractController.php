@@ -4,6 +4,7 @@ namespace Pagekit\Contract\Controller;
 
 use Pagekit\Application as App;
 use Pagekit\Contract\Model\Contract;
+use Pagekit\Contract\Model\Status;
 
 /**
  * @Access(admin=true)
@@ -23,7 +24,7 @@ class ContractController
                 'name' => 'contract:views/admin/contract-index.php'
             ],
             '$data' => [
-                'statuses' => Contract::getStatuses(),
+                'statuses' => Status::getStatuses(),
                 'authors'  => Contract::getAuthors(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),
@@ -43,9 +44,7 @@ class ContractController
      */
     public function editAction($id = 0)
     {
-
         if (!$id) {
-
             $contract = Contract::create();
 
         } else if (!$contract = Contract::find($id)) {
@@ -59,7 +58,7 @@ class ContractController
             ],
             '$data' => [
                 'contract' => $contract,
-                'statuses' => Contract::getStatuses(),
+                'statuses' => Status::getStatuses(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),
                 'config' => [
@@ -85,7 +84,7 @@ class ContractController
                 'name' => 'contract:views/admin/contract-index.php'
             ],
             '$data' => [
-                'statuses' => Contract::getStatuses(),
+                'statuses' => Status::getStatuses(),
                 'authors'  => Contract::getAuthors(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),
@@ -105,7 +104,7 @@ class ContractController
                 'name' => 'contract:views/admin/contract-status.php'
             ],
             '$data' => [
-                'statuses' => Contract::getStatuses(),
+                'statuses' => Status::getStatuses(),
                 'authors'  => Contract::getAuthors(),
                 'multipleVisits' => Contract::getMultipleVisits(),
                 'participations' => Contract::getParticipations(),

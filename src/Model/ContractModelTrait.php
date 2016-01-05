@@ -22,6 +22,7 @@ trait ContractModelTrait
      */
     public static function saved($event, Contract $contract)
     {
+        $bla = "";
     }
 
     /**
@@ -30,23 +31,6 @@ trait ContractModelTrait
     public static function getAuthors()
     {
         return self::query()->select('user_id, @system_user.name, @system_user.username')->groupBy('user_id, @system_user.name')->join('@system_user', 'user_id = @system_user.id')->execute()->fetchAll();
-
-    }
-
-    public static function getStatuses()
-    {
-        $contract_status = App::db()->createQueryBuilder()
-        ->from('@contract_status')
-        ->execute('id, name')
-        ->fetchAll();
-
-        $statuses = [];
-        foreach($contract_status as $status){
-            $status = array_values($status);
-            $statuses[$status[0]] = __($status[1]);;
-        }
-
-        return $statuses;
     }
 
     public static function getMultipleVisits(){
@@ -61,5 +45,9 @@ trait ContractModelTrait
             self::YES => __('Yes'),
             self::NO => __('No')
         ];
+    }
+
+    public static function getRandomID(){
+        return self::query()->select('uuid() as uid')->from('@contracts')->execute()->fetchAll()[0]['uid'];
     }
 }
