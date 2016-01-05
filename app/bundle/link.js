@@ -46,8 +46,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_script__, __vue_template__
-	__vue_script__ = __webpack_require__(9)
-	__vue_template__ = __webpack_require__(10)
+	__vue_script__ = __webpack_require__(21)
+	__vue_template__ = __webpack_require__(22)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
@@ -65,7 +65,7 @@
 
 /***/ },
 
-/***/ 9:
+/***/ 21:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -113,7 +113,7 @@
 
 /***/ },
 
-/***/ 10:
+/***/ 22:
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"uk-form-row\">\n        <label for=\"form-name\" class=\"uk-form-label\">{{ 'Name' | trans }}</label>\n        <div class=\"uk-form-controls\">\n            <input id=\"form-name\" type=\"text\" class=\"uk-form-width-large\" v-model=\"name\"></input>\n        </div>\n    </div>";

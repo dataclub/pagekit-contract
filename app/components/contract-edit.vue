@@ -7,8 +7,8 @@
                 <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
                 <div class="uk-form-controls">
                     <input id="form-name" class="uk-width-1-2" type="text" name="name" v-model="contract.name" v-validate:required >
-                    <a href="#" v-show="editingName || form.name.invalid" class="fa fa-refresh fa-2x uk-width-1-4" :title="'Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="getRandom('form-name', 'name', form.name)"></a>
-                    <a href="#" v-show="!editingName && !form.name.invalid" class="fa fa-remove fa-2x uk-width-1-4" :title="'Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="clearRandom('form-name', 'name', form.name)"></a>
+                    <a href="#" v-show="editingName || form.name.invalid" class="fa fa-refresh fa-2x uk-width-1-4" :title="'Refresh random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="getRandom('form-name', 'name', form.name)"></a>
+                    <a href="#" v-show="!editingName && !form.name.invalid" class="fa fa-remove fa-2x uk-width-1-4" :title="'Remove Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="clearRandom('form-name', 'name', form.name)"></a>
 
                     <p class="uk-form-help-block uk-text-danger" v-show="form.name.invalid">{{ 'Name cannot be blank.' | trans }}</p>
                 </div>
@@ -20,6 +20,8 @@
                     <select id="form-status" name="status" class="uk-width-1-2" v-model="contract.status_id">
                         <option v-for="(id, name) in data.statuses" :value="id">{{name}}</option>
                     </select>
+                    <a href="#" class="fa fa-minus fa-2x uk-width-1-4" :title="'Remove value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="deleteStatus(contract.status_id)"></a>
+
                 </div>
                 <div class="uk-form-controls uk-form-controls-text" v-show="!editingStatus">
                      <a href="#" class="fa fa-plus fa-2x uk-width-1-4" :title="'Add field' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="setStatusField(1)"></a>
@@ -27,7 +29,7 @@
                 <div class="uk-form-controls" :class="{'uk-hidden' : (!editingStatus)}">
                     <div class="uk-form-status">
                         <input id="form-status-add" type="text" name="status-add">
-                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="addStatusValue()"></a>
+                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="saveStatus('#form-status-add')"></a>
                     </div>
                 </div>
             </div>
@@ -38,6 +40,7 @@
                     <select id="form-version" name="version" class="uk-width-1-2" v-model="contract.version_id">
                         <option v-for="(id, name) in data.versions" :value="id">{{name}}</option>
                     </select>
+                    <a href="#" class="fa fa-minus fa-2x uk-width-1-4" :title="'Remove value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="deleteVersion(contract.version_id)"></a>
                 </div>
                 <div class="uk-form-controls uk-form-controls-text" v-show="!editingVersion">
                      <a href="#" class="fa fa-plus fa-2x uk-width-1-4" :title="'Add field' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="setVersionField(1)"></a>
@@ -45,7 +48,7 @@
                 <div class="uk-form-controls" :class="{'uk-hidden' : (!editingVersion)}">
                     <div class="uk-form-version">
                         <input id="form-version-add" type="text" name="version-add">
-                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="addVersionValue()"></a>
+                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="saveVersion('#form-version-add')"></a>
                     </div>
                 </div>
             </div>
@@ -225,15 +228,11 @@
             setVersionField: function (value) {
                 this.$data.editingVersion = value;
             },
-            addStatusValue: function () {
-                var value = $('#form-status-add')[0].value;
-                this.saveStatus(value);
-            },
-            addVersionValue: function () {
-                var value = $('#form-version-add')[0].value;
-                this.saveVersion(value);
-            },
-            saveStatus: function (value) {
+            saveStatus: function (elementID) {
+                var value = $(elementID) ? $(elementID)[0].value : '';
+                if(value == ''){
+                    return;
+                }
                 var data = {contract: this.contract, id: this.contract.id, status: value};
 
                 this.$broadcast('statusSave', data);
@@ -251,7 +250,11 @@
                     this.$notify(data, 'danger');
                 });
             },
-            saveVersion: function (value) {
+            saveVersion: function (elementID) {
+                var value = $(elementID) ? $(elementID)[0].value : '';
+                if(value == ''){
+                    return;
+                }
                 var data = {contract: this.contract, id: this.contract.id, version: value};
 
                 this.$broadcast('versionSave', data);
@@ -268,7 +271,39 @@
                 }, function (data) {
                     this.$notify(data, 'danger');
                 });
-            }
+            },
+            deleteStatus: function(value){
+                var keys = Object.keys(this.data.statuses);
+                if(keys.length > 0){
+                    var data = {contract: this.contract, id: this.contract.id, statusID: value};
+                    this.resource.delete({id: 'status'}, data, function (data) {
+
+                        this.data.statuses = data.statuses;
+                        this.$set('contract', data.contract);
+
+                        this.$notify(this.$trans('Status  deleted.'));
+                    }, function (data) {
+                        this.$notify(data, 'danger');
+                    });
+
+                }
+            },
+            deleteVersion: function(value){
+                var keys = Object.keys(this.data.versions);
+                if(keys.length > 0){
+                    var data = {contract: this.contract, id: this.contract.id, versionID: value};
+                    this.resource.delete({id: 'version'}, data, function (data) {
+
+                        this.data.versions = data.versions;
+                        this.$set('contract', data.contract);
+
+                        this.$notify(this.$trans('Version  deleted.'));
+                    }, function (data) {
+                        this.$notify(data, 'danger');
+                    });
+
+                }
+            },
         },
 
         computed: {},

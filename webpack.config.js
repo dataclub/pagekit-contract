@@ -7,9 +7,7 @@ module.exports = [
             "link": "./app/components/link.vue",
             "contract-index": "./app/views/admin/contract-index",
             "contract-edit": "./app/views/admin/contract-edit",
-            "accounts-index": "./app/views/admin/accounts-index",
-            "contract-version": "./app/views/admin/contract-version",
-            "contract-status": "./app/views/admin/contract-status"
+            "accounts-index": "./app/views/admin/accounts-index"
         },
         output: {
             filename: "./app/bundle/[name].js"

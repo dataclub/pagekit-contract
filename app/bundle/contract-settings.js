@@ -46,7 +46,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_script__, __vue_template__
-	__vue_script__ = __webpack_require__(8)
+	__vue_script__ = __webpack_require__(20)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
@@ -64,7 +64,7 @@
 
 /***/ },
 
-/***/ 8:
+/***/ 20:
 /***/ function(module, exports) {
 
 	"use strict";

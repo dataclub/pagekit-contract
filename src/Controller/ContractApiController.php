@@ -274,6 +274,77 @@ class ContractApiController
             App::abort(400, $e->getMessage());
         }
     }
+
+    /**
+     * @Route("/status", methods="DELETE")
+     * @Request({"contract": "array", "id": "int", "statusID": "string"}, csrf=true)
+     */
+    public function statusDeleteAction($data, $id = 0, $statusID = 0)
+    {
+        try {
+            if (!$contract = Contract::find($id)) {
+                if ($id) {
+                    App::abort(404, __('Contract not found.'));
+                }
+            }
+
+            // user without universal access can only edit their own posts
+            if (!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
+                return ['error' => __('Access denied.')];
+            }
+        }catch (Exception $e) {
+            App::abort(400, $e->getMessage());
+        }
+
+        if ($status = Status::find($statusID)) {
+            $status->delete();
+            @$data['status_id'] = Status::getFirstStatus();
+        }
+
+        $contract->status_id = @$data['status_id'];
+        $contract->save($data);
+        return [
+            'message' => 'success',
+            'contract' => $contract,
+            'statuses' => Status::getStatuses()
+        ];
+    }
+
+    /**
+     * @Route("/version", methods="DELETE")
+     * @Request({"contract": "array", "id": "int", "versionID": "string"}, csrf=true)
+     */
+    public function versionDeleteAction($data, $id = 0, $versionID = 0)
+    {
+        try {
+            if (!$contract = Contract::find($id)) {
+                if ($id) {
+                    App::abort(404, __('Contract not found.'));
+                }
+            }
+
+            // user without universal access can only edit their own posts
+            if (!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
+                return ['error' => __('Access denied.')];
+            }
+        }catch (Exception $e) {
+            App::abort(400, $e->getMessage());
+        }
+
+        if ($version = Version::find($versionID)) {
+            $version->delete();
+            @$data['version_id'] = Version::getFirstVersion();
+        }
+
+        $contract->version_id = @$data['version_id'];
+        $contract->save($data);
+        return [
+            'message' => 'success',
+            'contract' => $contract,
+            'versions' => Version::getVersions()
+        ];
+    }
+
     /**
      * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
      * @Request({"id": "int"}, csrf=true)

@@ -43,7 +43,7 @@
                     {{ 'Contracts' | trans }}
                 </th>
                 <th class="pk-table-width-100 uk-text-center">
-                    <input-filter :title="$trans('Status')" :value.sync="config.filter.status_id" :options="statusOptions"></input-filter>
+                    <input-filter2 :title="$trans('Status')" :value.sync="config.filter.status_id" :options="statusOptions"></input-filter2>
                 </th>
                 <th class="pk-table-width-100 uk-text-center">
                     <input-filter :title="$trans('Version')" :value.sync="config.filter.version_id" :options="versionOptions"></input-filter>
