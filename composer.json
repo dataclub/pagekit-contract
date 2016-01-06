@@ -1,7 +1,7 @@
 {
     "name": "pagekit/contract",
     "type": "pagekit-extension",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "title": "Contracts",
     "description": "Contracts extension for pagekit.",
     "license": "MIT",

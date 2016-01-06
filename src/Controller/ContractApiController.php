@@ -179,7 +179,7 @@ class ContractApiController
             return [
                 'message' => 'success',
                 'contract' => $contract,
-                'statuses' => Status::getStatuses()
+                'options' => Status::getStatuses()
             ];
 
         } catch (Exception $e) {
@@ -222,7 +222,7 @@ class ContractApiController
             return [
                 'message' => 'success',
                 'contract' => $contract,
-                'versions' => Version::getVersions()
+                'options' => Version::getVersions()
             ];
 
         } catch (Exception $e) {
@@ -298,15 +298,20 @@ class ContractApiController
 
         if ($status = Status::find($statusID)) {
             $status->delete();
-            @$data['status_id'] = Status::getFirstStatus();
+            $data['status_id'] = Status::getFirstStatus();
         }
 
+        $contract->name = @$data['name'];
+        $contract->place = @$data['place'];
+        $contract->participated = @$data['participated'];
+        $contract->visitedMultiple = @$data['visitedMultiple'];
+        $contract->version_id = @$data['version_id'];
         $contract->status_id = @$data['status_id'];
-        $contract->save($data);
+
         return [
             'message' => 'success',
             'contract' => $contract,
-            'statuses' => Status::getStatuses()
+            'options' => Status::getStatuses()
         ];
     }
 
@@ -333,15 +338,20 @@ class ContractApiController
 
         if ($version = Version::find($versionID)) {
             $version->delete();
-            @$data['version_id'] = Version::getFirstVersion();
+            $data['version_id'] = Version::getFirstVersion();
         }
 
+        $contract->name = @$data['name'];
+        $contract->place = @$data['place'];
+        $contract->participated = @$data['participated'];
+        $contract->visitedMultiple = @$data['visitedMultiple'];
         $contract->version_id = @$data['version_id'];
-        $contract->save($data);
+        $contract->status_id = @$data['status_id'];
+
         return [
             'message' => 'success',
             'contract' => $contract,
-            'versions' => Version::getVersions()
+            'options' => Version::getVersions()
         ];
     }
 

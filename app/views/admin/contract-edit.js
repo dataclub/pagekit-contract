@@ -34,23 +34,7 @@ window.Contract = {
         this.tab = UIkit.tab(this.$els.tab, {connect: this.$els.content});
     },
 
-    computed: {
-
-        statusOptions: function () {
-            var options = _.map(this.$data.statuses, function (name, id) {
-                return {text: name, value: id};
-            });
-
-            return [{label: this.$trans('Filter by'), options: options}];
-        },
-        versionOptions: function(){
-            var options = _.map(this.$data.versions, function (name, id) {
-                return {text: name, value: id};
-            });
-
-            return [{label: this.$trans('Filter by'), options: options}];
-        }
-    },
+    computed: {},
     methods: {
         save: function () {
             var data = {contract: this.contract, id: this.contract.id};
@@ -77,13 +61,13 @@ window.Contract = {
     },
 
     components: {
-
         settings: require('../../components/contract-edit.vue')
 
     }
 
 };
 
+Vue.component('select-option', require('../../components/select-option.vue'));
 Vue.ready(window.Contract);
 
 

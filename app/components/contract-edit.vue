@@ -16,41 +16,12 @@
 
             <div class="uk-form-row">
                 <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
-                <div class="uk-form-controls">
-                    <select id="form-status" name="status" class="uk-width-1-2" v-model="contract.status_id">
-                        <option v-for="(id, name) in data.statuses" :value="id">{{name}}</option>
-                    </select>
-                    <a href="#" class="fa fa-minus fa-2x uk-width-1-4" :title="'Remove value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="deleteStatus(contract.status_id)"></a>
-
-                </div>
-                <div class="uk-form-controls uk-form-controls-text" v-show="!editingStatus">
-                     <a href="#" class="fa fa-plus fa-2x uk-width-1-4" :title="'Add field' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="setStatusField(1)"></a>
-                </div>
-                <div class="uk-form-controls" :class="{'uk-hidden' : (!editingStatus)}">
-                    <div class="uk-form-status">
-                        <input id="form-status-add" type="text" name="status-add">
-                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="saveStatus('#form-status-add')"></a>
-                    </div>
-                </div>
+                <select-option :contract.sync="contract" :title="'Status' | trans" :id="'form-status'" :status="false" :name="'status'" :options="data.statuses" :value="contract.status_id"></select-option>
             </div>
 
             <div class="uk-form-row">
                 <label for="form-version" class="uk-form-label">{{ 'Version' | trans }}</label>
-                <div class="uk-form-controls">
-                    <select id="form-version" name="version" class="uk-width-1-2" v-model="contract.version_id">
-                        <option v-for="(id, name) in data.versions" :value="id">{{name}}</option>
-                    </select>
-                    <a href="#" class="fa fa-minus fa-2x uk-width-1-4" :title="'Remove value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="deleteVersion(contract.version_id)"></a>
-                </div>
-                <div class="uk-form-controls uk-form-controls-text" v-show="!editingVersion">
-                     <a href="#" class="fa fa-plus fa-2x uk-width-1-4" :title="'Add field' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="setVersionField(1)"></a>
-                </div>
-                <div class="uk-form-controls" :class="{'uk-hidden' : (!editingVersion)}">
-                    <div class="uk-form-version">
-                        <input id="form-version-add" type="text" name="version-add">
-                        <a href="#" class="fa fa-check fa-2x uk-width-1-4" :title="'Add value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="saveVersion('#form-version-add')"></a>
-                    </div>
-                </div>
+                <select-option :contract.sync="contract" :title="'Version' | trans" :id="'form-version'" :status="false" :name="'version'" :options="data.versions" :value="contract.version_id"></select-option>
             </div>
 
             <div class="uk-form-row">
@@ -161,9 +132,6 @@
                 newCancellationDateValue: data.cancellationDate,
                 oldCancellationDateValue: cancellationDate,
                 editingName: data.name == null,
-
-                editingStatus: false,
-                editingVersion: false,
             }
         },
         created: function () {
@@ -221,92 +189,25 @@
                     formElement.invalid = true;
                     this.contract.name = "";
                 }
-            },
-            setStatusField: function (value) {
-                this.$data.editingStatus = value;
-            },
-            setVersionField: function (value) {
-                this.$data.editingVersion = value;
-            },
-            saveStatus: function (elementID) {
-                var value = $(elementID) ? $(elementID)[0].value : '';
-                if(value == ''){
-                    return;
-                }
-                var data = {contract: this.contract, id: this.contract.id, status: value};
-
-                this.$broadcast('statusSave', data);
-
-                this.resource.save({id: 'status'}, data, function (data) {
-                    if (!this.contract.id) {
-                        window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
-                    }
-
-                    this.data.statuses = data.statuses;
-                    this.$set('contract', data.contract);
-
-                    this.$notify(this.$trans('Statuses saved.'));
-                }, function (data) {
-                    this.$notify(data, 'danger');
-                });
-            },
-            saveVersion: function (elementID) {
-                var value = $(elementID) ? $(elementID)[0].value : '';
-                if(value == ''){
-                    return;
-                }
-                var data = {contract: this.contract, id: this.contract.id, version: value};
-
-                this.$broadcast('versionSave', data);
-
-                this.resource.save({id: 'version'}, data, function (data) {
-                    if (!this.contract.id) {
-                        window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
-                    }
-
-                    this.data.versions = data.versions;
-                    this.$set('contract', data.contract);
-
-                    this.$notify(this.$trans('Versions saved.'));
-                }, function (data) {
-                    this.$notify(data, 'danger');
-                });
-            },
-            deleteStatus: function(value){
-                var keys = Object.keys(this.data.statuses);
-                if(keys.length > 0){
-                    var data = {contract: this.contract, id: this.contract.id, statusID: value};
-                    this.resource.delete({id: 'status'}, data, function (data) {
-
-                        this.data.statuses = data.statuses;
-                        this.$set('contract', data.contract);
-
-                        this.$notify(this.$trans('Status  deleted.'));
-                    }, function (data) {
-                        this.$notify(data, 'danger');
-                    });
-
-                }
-            },
-            deleteVersion: function(value){
-                var keys = Object.keys(this.data.versions);
-                if(keys.length > 0){
-                    var data = {contract: this.contract, id: this.contract.id, versionID: value};
-                    this.resource.delete({id: 'version'}, data, function (data) {
-
-                        this.data.versions = data.versions;
-                        this.$set('contract', data.contract);
-
-                        this.$notify(this.$trans('Version  deleted.'));
-                    }, function (data) {
-                        this.$notify(data, 'danger');
-                    });
-
-                }
-            },
+            }
         },
 
-        computed: {},
+        computed: {
+            statusOptions: function () {
+                var options = _.map(this.data.statuses, function (name, id) {
+                    return {text: name, value: id};
+                });
+
+                return options;
+            },
+            versionOptions: function(){
+                var options = _.map(this.data.versions, function (name, id) {
+                    return {text: name, value: id};
+                });
+
+                return options;
+            }
+        },
 
         events: {
             save: function (data) {

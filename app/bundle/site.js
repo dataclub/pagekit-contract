@@ -46,8 +46,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_script__, __vue_template__
-	__vue_script__ = __webpack_require__(23)
-	__vue_template__ = __webpack_require__(24)
+	__vue_script__ = __webpack_require__(27)
+	__vue_template__ = __webpack_require__(28)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
@@ -65,7 +65,7 @@
 
 /***/ },
 
-/***/ 23:
+/***/ 27:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -100,7 +100,7 @@
 
 /***/ },
 
-/***/ 24:
+/***/ 28:
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"uk-form-horizontal\">\n\n        <partial name=\"settings\"></partial>\n\n    </div>";
