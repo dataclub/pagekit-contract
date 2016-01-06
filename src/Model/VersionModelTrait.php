@@ -49,6 +49,8 @@ trait VersionModelTrait
     }
 
     public static function getFirstVersion(){
-        return self::query()->select('id')->from('@contract_versions')->limit(1)->first()->id;
+        $firstVersion = self::query()->select('id')->from('@contract_versions')->limit(1)->first();
+
+        return $firstVersion == null ? null : $firstVersion->id;
     }
 }

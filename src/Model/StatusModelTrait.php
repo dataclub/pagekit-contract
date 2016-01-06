@@ -49,6 +49,8 @@ trait StatusModelTrait
     }
 
     public static function getFirstStatus(){
-        return self::query()->select('id')->from('@contract_status')->limit(1)->first()->id;
+        $firstStatus = self::query()->select('id')->from('@contract_status')->limit(1)->first();
+
+        return $firstStatus == null ? null : $firstStatus->id;
     }
 }

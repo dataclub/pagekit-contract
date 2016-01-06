@@ -10,14 +10,6 @@ trait ContractModelTrait
     use ModelTrait;
 
     /**
-     * {@inheritdoc}
-     */
-    public static function updateLogin(Contract $contract)
-    {
-        static::where(['id' => $contract->id])->update(['date' => date('Y-m-d H:i:s')]);
-    }
-
-    /**
      * @Saved
      */
     public static function saved($event, Contract $contract)

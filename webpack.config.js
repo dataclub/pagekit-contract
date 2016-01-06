@@ -2,7 +2,6 @@ module.exports = [
 
     {
         entry: {
-            "contract-settings": "./app/components/contract-settings.vue",
             "site": "./app/components/site.vue",
             "link": "./app/components/link.vue",
             "contract-index": "./app/views/admin/contract-index",
