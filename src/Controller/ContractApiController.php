@@ -25,7 +25,7 @@ class ContractApiController
 
         extract($filter, EXTR_SKIP);
 
-        if ($author) {
+        if (!empty($author) && $author) {
             $query->where(function ($query) use ($author) {
                 $query->orWhere(['user_id' => (int) $author]);
             });
@@ -36,7 +36,7 @@ class ContractApiController
         });
 
 
-        if (is_numeric($status_id)) {
+        if (!empty($status_id) && is_numeric($status_id)) {
 
             $query->where(['status_id' => (int) $status_id]);
 
@@ -45,7 +45,7 @@ class ContractApiController
             }
         }
 
-        if (is_numeric($version_id)) {
+        if (!empty($version_id) && is_numeric($version_id)) {
 
             $query->where(['version_id' => (int) $version_id]);
 
@@ -54,12 +54,12 @@ class ContractApiController
             }
         }
 
-        if (is_numeric($participated)) {
+        if (!empty($participated) && is_numeric($participated)) {
             $query->where(['participated' => (int) $participated]);
 
         }
 
-        if (is_numeric($visitedMultiple)) {
+        if (!empty($visitedMultiple) && is_numeric($visitedMultiple)) {
             $query->where(['visitedMultiple' => (int) $visitedMultiple]);
         }
 
@@ -114,14 +114,6 @@ class ContractApiController
 
             }
 
-            $contract->name = @$data['name'];
-            $contract->place = @$data['place'];
-            $contract->participated = @$data['participated'];
-            $contract->visitedMultiple = @$data['visitedMultiple'];
-            $contract->status_id = @$data['status_id'];
-            $contract->version_id = @$data['version_id'];
-
-
             // user without universal access can only edit their own posts
             if(!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
                 return ['error' => __('Access denied.')];
@@ -132,7 +124,7 @@ class ContractApiController
                 $data['user_id'] = App::user()->id;
             }
 
-            if($contract->validate()){
+            if($contract->validate($data)){
                 $contract->save($data);
             }
 
@@ -169,16 +161,9 @@ class ContractApiController
                 }
             }
 
-            $contract->name = @$data['name'];
-            $contract->place = @$data['place'];
-            $contract->participated = @$data['participated'];
-            $contract->visitedMultiple = @$data['visitedMultiple'];
-            $contract->status_id = @$data['status_id'];
-            $contract->version_id = @$data['version_id'];
-
             return [
                 'message' => 'success',
-                'contract' => $contract,
+                'contract' => $data,
                 'options' => Status::getStatuses()
             ];
 
@@ -212,16 +197,10 @@ class ContractApiController
                 }
             }
 
-            $contract->name = @$data['name'];
-            $contract->place = @$data['place'];
-            $contract->participated = @$data['participated'];
-            $contract->visitedMultiple = @$data['visitedMultiple'];
-            $contract->status_id = @$data['status_id'];
-            $contract->version_id = @$data['version_id'];
 
             return [
                 'message' => 'success',
-                'contract' => $contract,
+                'contract' => $data,
                 'options' => Version::getVersions()
             ];
 
@@ -243,13 +222,9 @@ class ContractApiController
                     App::abort(404, __('Contract not found.'));
                 }
 
-                $data['date'] = new \DateTime;
                 $data['status_id'] = Status::getFirstStatus();
                 $data['version_id'] = Version::getFirstVersion();
-                $contract = Contract::create(['date' => $data['date'], 'status_id' => $data['status_id'], 'version_id' => $data['version_id']]);
-            }else{
-                $contract->status_id = @$data['status_id'];
-                $contract->version_id = @$data['version_id'];
+                $contract = Contract::create();
             }
 
             // user without universal access can only edit their own posts
@@ -259,15 +234,11 @@ class ContractApiController
 
             $sqlUID = Contract::getRandomSQLID();
             $uid = Contract::getRandomID();
-            $contract->name = $sqlUID == null ? $uid : $sqlUID;
-            $contract->place = @$data['place'];
-            $contract->participated = @$data['participated'];
-            $contract->visitedMultiple = @$data['visitedMultiple'];
-
+            $data['name'] = $sqlUID == null ? $uid : $sqlUID;
 
             return [
                 'message' => 'success',
-                'contract' => $contract,
+                'contract' => $data,
             ];
 
         } catch (Exception $e) {
@@ -301,16 +272,9 @@ class ContractApiController
             $data['status_id'] = Status::getFirstStatus();
         }
 
-        $contract->name = @$data['name'];
-        $contract->place = @$data['place'];
-        $contract->participated = @$data['participated'];
-        $contract->visitedMultiple = @$data['visitedMultiple'];
-        $contract->version_id = @$data['version_id'];
-        $contract->status_id = @$data['status_id'];
-
         return [
             'message' => 'success',
-            'contract' => $contract,
+            'contract' => $data,
             'options' => Status::getStatuses()
         ];
     }
@@ -341,16 +305,9 @@ class ContractApiController
             $data['version_id'] = Version::getFirstVersion();
         }
 
-        $contract->name = @$data['name'];
-        $contract->place = @$data['place'];
-        $contract->participated = @$data['participated'];
-        $contract->visitedMultiple = @$data['visitedMultiple'];
-        $contract->version_id = @$data['version_id'];
-        $contract->status_id = @$data['status_id'];
-
         return [
             'message' => 'success',
-            'contract' => $contract,
+            'contract' => $data,
             'options' => Version::getVersions()
         ];
     }

@@ -202,7 +202,7 @@ return [
         },
 
         'view.styles' => function ($event, $styles) {
-            //$styles->register('contract-settings', 'blog:app/assets/css/contract.css');
+            $styles->register('contract-settings', 'blog:app/assets/css/contract.css');
         },
         'view.scripts' => function ($event, $scripts) {
                //$scripts->register('contract-settings', 'contract:app/bundle/contract-settings.js', '~panel-link');

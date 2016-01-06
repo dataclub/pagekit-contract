@@ -40,8 +40,10 @@ trait ContractModelTrait
     }
 
     public static function getRandomSQLID(){
-        return self::query()->select('uuid() as uid')->from('@contracts')->execute()->fetchAll()[0]['uid'];
+        $uid = self::query()->select('uuid() as uid')->from('@contracts')->execute()->fetchAll();
+        return isset($uid[0]['uid']) && $uid[0]['uid'] != null ? $uid[0]['uid'] : false;
     }
+
     public static function getRandomID(){
 
         if (function_exists('com_create_guid')){

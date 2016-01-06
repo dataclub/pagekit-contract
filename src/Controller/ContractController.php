@@ -46,7 +46,9 @@ class ContractController
     public function editAction($id = 0)
     {
         if (!$id) {
-            $contract = Contract::create(['date' => new \DateTime(), 'status_id' => Status::getFirstStatus(), 'version_id' => Version::getFirstVersion()]);
+            $status_id = Status::getFirstStatus();
+            $version_id = Version::getFirstVersion();
+            $contract = Contract::create(['date' => null, 'status_id' => $status_id, 'version_id' => $version_id]);
         } else if (!$contract = Contract::find($id)) {
             App::abort(404, 'Contract not found.');
         }
