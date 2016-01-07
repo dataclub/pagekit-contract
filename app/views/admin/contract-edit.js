@@ -42,6 +42,11 @@ window.Contract = {
             this.$broadcast('save', data);
 
             this.resource.save({id: this.contract.id}, data, function (data) {
+                if(data.message == 'error'){
+                    this.$notify(this.$trans(data.content));
+                    return;
+                }
+
                 if (!this.contract.id) {
                     window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
                 }

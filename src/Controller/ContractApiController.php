@@ -124,12 +124,14 @@ class ContractApiController
                 $data['user_id'] = App::user()->id;
             }
 
-            if($contract->validate($data)){
+            $validated = $contract->validate($data);
+            if($validated === true){
                 $contract->save($data);
+                return ['message' => 'success', 'contract' => $contract];
             }
 
 
-            return ['message' => 'success', 'contract' => $contract];
+            return ['message' => 'error', 'content' => $validated];
 
         } catch (Exception $e) {
             App::abort(400, $e->getMessage());

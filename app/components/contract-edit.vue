@@ -8,7 +8,7 @@
                 <div class="uk-form-controls">
                     <input id="form-name" class="uk-width-1-2" type="text" name="name" v-model="contract.name" v-validate:required >
                     <a href="#" v-show="editingName || form.name.invalid" class="fa fa-refresh fa-2x uk-width-1-4" :title="'Refresh random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="getRandom('form-name', 'name', form.name)"></a>
-                    <a href="#" v-show="!editingName && !form.name.invalid" class="fa fa-remove fa-2x uk-width-1-4" :title="'Remove Random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="clearRandom('form-name', 'name', form.name)"></a>
+                    <a href="#" v-show="!editingName && !form.name.invalid" class="fa fa-remove fa-2x uk-width-1-4" :title="'Remove random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="clearRandom('form-name', 'name', form.name)"></a>
 
                     <p class="uk-form-help-block uk-text-danger" v-show="form.name.invalid">{{ 'Name cannot be blank.' | trans }}</p>
                 </div>
@@ -16,12 +16,12 @@
 
             <div class="uk-form-row">
                 <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
-                <select-option :contract.sync="contract" :title="'Status' | trans" :id="'form-status'" :status="false" :name="'status'" :options="data.statuses" :value="contract.status_id"></select-option>
+                <select-option :contract.sync="contract" :title="'Status'" :id="'form-status'" :status="false" :name="'status'" :options="data.statuses" :value="contract.status_id"></select-option>
             </div>
 
             <div class="uk-form-row">
                 <label for="form-version" class="uk-form-label">{{ 'Version' | trans }}</label>
-                <select-option :contract.sync="contract" :title="'Version' | trans" :id="'form-version'" :status="false" :name="'version'" :options="data.versions" :value="contract.version_id"></select-option>
+                <select-option :contract.sync="contract" :title="'Version'" :id="'form-version'" :status="false" :name="'version'" :options="data.versions" :value="contract.version_id"></select-option>
             </div>
 
             <div class="uk-form-row">

@@ -12,12 +12,18 @@
     "Place" => "Ort",
     "Number" => 'Nummer',
     "Number cannot be blank." => "Vertragsnummer darf nicht leer sein.",
-    "Name cannot be blank." => "Vertragsname darf nicht leer sein.",
-    "Place cannot be blank." => "Vertragsort darf nicht leer sein.",
+    "Place cannot be blank." => "Ort darf nicht leer sein.",
+    "Status cannot be blank." => "Status kann nicht leer sein.",
+    "Version cannot be blank." => "Version kann nicht leer sein.",
+
+    "Name required." => "Name erforderlich.",
+    "Place required." => "Ort erforderlich.",
+    "Date required." => "Datum erforderlich.",
+    "Status required." => "Status erforderlich.",
+    "Version required." => "Version erforderlich.",
+
     "Delete contracts?" => "Verträge löschen?",
     "Never" => "Nie",
-    "Contract saved." => "Verträge gespeichert.",
-    "Contract deleted." => "Verträge gelöscht,",
     "No contracts found." => "Keine Verträge gefunden.",
     "Show Startdate" => "Eingangsdatum anzeigen",
     "Hide Startdate" => "Eingangsdatum verstecken",
@@ -33,12 +39,29 @@
     "No" => "Nein",
     "Activate status" => "Status aktivieren",
     "Block status" => "Status sperren",
-    "Contracts saved." => "Verträge gespeichert.",
-    "Contracts deleted." => "Verträge gelöscht.",
+
 
     "Blocked" => "Gesperrt",
     "Active" => "Aktiv",
-    "New" => "Neu"
+    "New" => "Neu",
+
+    "Contracts saved." => "Verträge gespeichert.",
+    "Contract saved." => "Vertrag gespeichert.",
+    "Version saved." => "Version gespeichert.",
+    "Status saved." => "Status gespeichert.",
+
+    "Contracts deleted." => "Verträge gelöscht.",
+    "Contract deleted." => "Vertrag gelöscht.",
+    "Version deleted." => "Version gelöscht.",
+    "Status deleted." => "Status gelöscht.",
+
+    "Random-value set." => "Zufallswert hinzugefügt.",
+    "Remove random" => "Zufallswert leeren",
+    "Refresh random" => "Neuer Zufallswert",
+    "Add value" => "Wert hinzufügen",
+    "Add field" => "Feld hinzufügen",
+    "Remove value" => "Wert löschen",
+    "It must be set one value at least." => "Es muss mindestens ein Wert vorhanden sein.",
 );
 
 ?>
