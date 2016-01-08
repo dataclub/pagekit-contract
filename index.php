@@ -1,7 +1,5 @@
 <?php
 
-
-
 use Pagekit\Contract\Event\RouteListener;
 /*
  * This array is the module definition.
