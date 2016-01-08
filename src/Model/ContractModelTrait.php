@@ -25,17 +25,14 @@ trait ContractModelTrait
         return self::query()->select('user_id, @system_user.name, @system_user.username')->groupBy('user_id, @system_user.name')->join('@system_user', 'user_id = @system_user.id')->execute()->fetchAll();
     }
 
-    public static function getMultipleVisits(){
-        return [
-            self::YES => __('Yes'),
-            self::NO => __('No')
-        ];
-    }
 
-    public static function getParticipations(){
+    public static function getContractPeriods(){
+        $a = "";
         return [
-            self::YES => __('Yes'),
-            self::NO => __('No')
+            self::three => __('Three'),
+            self::six => __('Six'),
+            self::twelve => __('Twelve'),
+            self::twenty_four => __('Twenty four')
         ];
     }
 

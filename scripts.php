@@ -16,7 +16,7 @@ return [
      *
      */
     'enable' => function ($app) {
-
+        $db = $app['db'];
         $util = $app['db']->getUtility();
 
         /**
@@ -30,8 +30,8 @@ return [
                 $table->addColumn('place', 'string', ['length' => 255, 'notnull' => false]);
                 $table->addColumn('startDate', 'datetime', ['notnull' => false]);
                 $table->addColumn('cancellationDate', 'datetime', ['notnull' => false]);
-                $table->addColumn('participated', 'boolean', ['default' => false]);
-                $table->addColumn('visitedMultiple', 'boolean', ['default' => false]);
+                $table->addColumn('contract_period', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 12]);
+                $table->addColumn('requirements', 'simple_array', ['notnull' => false]);
 
                 $table->addColumn('version_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
                 $table->addColumn('status_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
@@ -104,6 +104,25 @@ return [
         }
 
         /**
+         *  Contract_Versions-Table
+         */
+        if ($util->tableExists('@contract_requirements') === false) {
+            $util->createTable('@contract_requirements', function ($table) {
+                $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
+                $table->addColumn('name', 'string', ['length' => 255]);
+
+                $table->setPrimaryKey(['id']);
+            });
+
+            $db->insert('@contract_requirements', ['id' => 1, 'name' => 'Workshop']);
+            $db->insert('@contract_requirements', ['id' => 2, 'name' => 'E-Mail (Feedback)']);
+            $db->insert('@contract_requirements', ['id' => 3, 'name' => 'Anruf -> Vertrag zugeschickt']);
+            $db->insert('@contract_requirements', ['id' => 4, 'name' => 'Reminder 1 - Anruf -> Email']);
+            $db->insert('@contract_requirements', ['id' => 5, 'name' => 'Reminder 2 - Anruf -> Email']);
+            $db->insert('@contract_requirements', ['id' => 6, 'name' => 'Reminder 3 - Anruf -> Email']);
+        }
+
+        /**
          *  Contract_Companies-Table
          */
         if ($util->tableExists('@contract_companies') === false) {
@@ -114,8 +133,6 @@ return [
                 $table->setPrimaryKey(['id']);
             });
         }
-
-
 
     },
 

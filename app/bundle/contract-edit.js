@@ -138,7 +138,7 @@
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
 	  if (!hotAPI.compatible) return
-	  var id = "/Users/dataclub/public_html/pagekit/packages/pagekit/pagekit-contract/app/components/contract-edit.vue"
+	  var id = "/home/dataclub/public_html/pagekit/packages/pagekit/pagekit-contract/app/components/contract-edit.vue"
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
@@ -153,31 +153,40 @@
 	'use strict';
 
 	// <template>
-
+	//
 	//     <div class="uk-grid" data-uk-grid-margin>
 	//         <div class="uk-width-medium-2-3 uk-width-large-3-4">
-
+	//
 	//             <div class="uk-form-row">
 	//                 <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
 	//                 <div class="uk-form-controls">
 	//                     <input id="form-name" class="uk-width-1-2" type="text" name="name" v-model="contract.name" v-validate:required >
 	//                     <a href="#" v-show="editingName || form.name.invalid" class="fa fa-refresh fa-2x uk-width-1-4" :title="'Refresh random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="getRandom('form-name', 'name', form.name)"></a>
 	//                     <a href="#" v-show="!editingName && !form.name.invalid" class="fa fa-remove fa-2x uk-width-1-4" :title="'Remove random' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="clearRandom('form-name', 'name', form.name)"></a>
-
+	//
 	//                     <p class="uk-form-help-block uk-text-danger" v-show="form.name.invalid">{{ 'Name cannot be blank.' | trans }}</p>
 	//                 </div>
 	//             </div>
-
+	//
 	//             <div class="uk-form-row">
 	//                 <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
 	//                 <select-option :contract.sync="contract" :title="'Status'" :id="'form-status'" :status="false" :name="'status'" :options="data.statuses" :value="contract.status_id"></select-option>
 	//             </div>
-
+	//
 	//             <div class="uk-form-row">
 	//                 <label for="form-version" class="uk-form-label">{{ 'Version' | trans }}</label>
 	//                 <select-option :contract.sync="contract" :title="'Version'" :id="'form-version'" :status="false" :name="'version'" :options="data.versions" :value="contract.version_id"></select-option>
 	//             </div>
-
+	//
+	//             <div class="uk-form-row">
+	//                 <label for="form-participated" class="uk-form-label">{{ 'Contract period' | trans }}</label>
+	//                 <div class="uk-form-controls">
+	//                     <select id="form-participated" class="uk-width-1-2" v-model="contract.contract_period">
+	//                         <option v-for="(id, value) in data.contract_period" :value="id">{{id}}</option>
+	//                     </select>
+	//                 </div>
+	//             </div>
+	//
 	//             <div class="uk-form-row">
 	//                 <label for="form-place" class="uk-form-label">{{ 'Place' | trans }}</label>
 	//                 <div class="uk-form-controls">
@@ -185,39 +194,31 @@
 	//                     <p class="uk-form-help-block uk-text-danger" v-show="form.place.invalid">{{ 'Place cannot be blank.' | trans }}</p>
 	//                 </div>
 	//             </div>
-
+	//
 	//             <div class="uk-form-row" v-if='contract.date'>
 	//                 <span class="uk-form-label">{{ 'Date' | trans }}</span>
 	//                 <div class="uk-form-controls uk-form-controls-text">
 	//                     <p>{{ $trans('%date%', { date: contract.date ? $date(contract.date) : $trans('Never') }) }}</p>
 	//                 </div>
 	//             </div>
-
+	//
+	//
 	//             <div class="uk-form-row">
-	//                 <label for="form-participated" class="uk-form-label">{{ 'Participated?' | trans }}</label>
-	//                 <div class="uk-form-controls">
-	//                     <select id="form-participated" class="uk-width-1-2" v-model="contract.participated">
-	//                         <option v-for="(id, participated) in data.participations" :value="id">{{participated}}</option>
-	//                     </select>
+	//                 <span class="uk-form-label">{{ 'Requirements' | trans }}</span>
+	//                 <div class="uk-form-controls uk-form-controls-text">
+	//                     <p v-for="requirement in data.requirements" class="uk-form-controls-condensed">
+	//                         <label><input type="checkbox" :value="requirement.id" v-model="contract.requirements" number> {{ requirement.name }}</label>
+	//                     </p>
 	//                 </div>
 	//             </div>
-
-	//             <div class="uk-form-row">
-	//                 <label for="form-visitedMultiple" class="uk-form-label">{{ 'Visited multiple?' | trans }}</label>
-	//                 <div class="uk-form-controls">
-	//                     <select id="form-visitedMultiple" class="uk-width-1-2" v-model="contract.visitedMultiple">
-	//                         <option v-for="(id, visitedMultiple) in data.multipleVisits" :value="id">{{visitedMultiple}}</option>
-	//                     </select>
-	//                 </div>
-	//             </div>
-
+	//
 	//             <div class="uk-form-row">
 	//                 <label for="form-start" class="uk-form-label">
 	//                     {{ 'Start' | trans }}
 	//                     <a href="#" v-show="!editingStartdate" class="pk-icon-edit pk-icon-hover" :title="'Edit Startdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusStartdate(1)"></a>
 	//                     <a href="#" :class="{'uk-hidden' : (!editingStartdate)}" class="pk-icon-block pk-icon-hover" :title="'Hide Startdate' | trans" data-uk-tooltip="{delay: 500}" @click="statusStartdate(0)"></a>
 	//                 </label>
-
+	//
 	//                 <div class="uk-form-controls uk-form-controls-text" v-show="!editingStartdate">
 	//                     {{ startDate ? $trans('%date%', { date: $date(startDate) }) : '-' }}
 	//                 </div>
@@ -228,14 +229,14 @@
 	//                     </div>
 	//                 </div>
 	//             </div>
-
+	//
 	//             <div class="uk-form-row">
 	//                 <label for="form-cancellation" class="uk-form-label">
 	//                     {{ 'Cancellation' | trans }}
 	//                     <a href="#" v-show="!editingCancellationdate" class="pk-icon-edit pk-icon-hover" :title="'Edit Cancellationdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusCancellationdate(1)"></a>
 	//                     <a href="#" :class="{'uk-hidden' : (!editingCancellationdate)}" class="pk-icon-block pk-icon-hover" :title="'Hide Cancellationdate' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="statusCancellationdate(0)"></a>
 	//                 </label>
-
+	//
 	//                 <div class="uk-form-controls uk-form-controls-text" v-show="!editingCancellationdate">
 	//                     {{ cancellationDate ? $trans('%date%', { date: $date(cancellationDate) }) : '-' }}
 	//                 </div>
@@ -245,13 +246,14 @@
 	//                     </div>
 	//                 </div>
 	//             </div>
-
+	//
+	//
 	//         </div>
-
+	//
 	//     </div>
-
+	//
 	// </template>
-
+	//
 	// <script>
 
 	module.exports = {
@@ -345,6 +347,10 @@
 	    },
 
 	    computed: {
+	        isChecked: function isChecked(requirements, id) {
+	            console.log(123);
+	            return requirements.indexOf(id) != -1;
+	        },
 	        statusOptions: function statusOptions() {
 	            var options = _.map(this.data.statuses, function (name, id) {
 	                return { text: name, value: id };
@@ -378,14 +384,13 @@
 	};
 
 	// </script>
-
-	/* generated by vue-loader */
+	//
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n    <div class=\"uk-grid\" data-uk-grid-margin>\n        <div class=\"uk-width-medium-2-3 uk-width-large-3-4\">\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-name\" class=\"uk-form-label\">{{ 'Name' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <input id=\"form-name\" class=\"uk-width-1-2\" type=\"text\" name=\"name\" v-model=\"contract.name\" v-validate:required >\n                    <a href=\"#\" v-show=\"editingName || form.name.invalid\" class=\"fa fa-refresh fa-2x uk-width-1-4\" :title=\"'Refresh random' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"getRandom('form-name', 'name', form.name)\"></a>\n                    <a href=\"#\" v-show=\"!editingName && !form.name.invalid\" class=\"fa fa-remove fa-2x uk-width-1-4\" :title=\"'Remove random' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"clearRandom('form-name', 'name', form.name)\"></a>\n\n                    <p class=\"uk-form-help-block uk-text-danger\" v-show=\"form.name.invalid\">{{ 'Name cannot be blank.' | trans }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-status\" class=\"uk-form-label\">{{ 'Status' | trans }}</label>\n                <select-option :contract.sync=\"contract\" :title=\"'Status'\" :id=\"'form-status'\" :status=\"false\" :name=\"'status'\" :options=\"data.statuses\" :value=\"contract.status_id\"></select-option>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-version\" class=\"uk-form-label\">{{ 'Version' | trans }}</label>\n                <select-option :contract.sync=\"contract\" :title=\"'Version'\" :id=\"'form-version'\" :status=\"false\" :name=\"'version'\" :options=\"data.versions\" :value=\"contract.version_id\"></select-option>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-place\" class=\"uk-form-label\">{{ 'Place' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <input id=\"form-place\" class=\"uk-form-width-large\" type=\"text\" name=\"place\" v-model=\"contract.place\" v-validate:required>\n                    <p class=\"uk-form-help-block uk-text-danger\" v-show=\"form.place.invalid\">{{ 'Place cannot be blank.' | trans }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\" v-if='contract.date'>\n                <span class=\"uk-form-label\">{{ 'Date' | trans }}</span>\n                <div class=\"uk-form-controls uk-form-controls-text\">\n                    <p>{{ $trans('%date%', { date: contract.date ? $date(contract.date) : $trans('Never') }) }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-participated\" class=\"uk-form-label\">{{ 'Participated?' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <select id=\"form-participated\" class=\"uk-width-1-2\" v-model=\"contract.participated\">\n                        <option v-for=\"(id, participated) in data.participations\" :value=\"id\">{{participated}}</option>\n                    </select>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-visitedMultiple\" class=\"uk-form-label\">{{ 'Visited multiple?' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <select id=\"form-visitedMultiple\" class=\"uk-width-1-2\" v-model=\"contract.visitedMultiple\">\n                        <option v-for=\"(id, visitedMultiple) in data.multipleVisits\" :value=\"id\">{{visitedMultiple}}</option>\n                    </select>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-start\" class=\"uk-form-label\">\n                    {{ 'Start' | trans }}\n                    <a href=\"#\" v-show=\"!editingStartdate\" class=\"pk-icon-edit pk-icon-hover\" :title=\"'Edit Startdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusStartdate(1)\"></a>\n                    <a href=\"#\" :class=\"{'uk-hidden' : (!editingStartdate)}\" class=\"pk-icon-block pk-icon-hover\" :title=\"'Hide Startdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click=\"statusStartdate(0)\"></a>\n                </label>\n\n                <div class=\"uk-form-controls uk-form-controls-text\" v-show=\"!editingStartdate\">\n                    {{ startDate ? $trans('%date%', { date: $date(startDate) }) : '-' }}\n                </div>\n                <div class=\"uk-form-controls\" :class=\"{'uk-hidden' : (!editingStartdate)}\">\n                    <div class=\"uk-form-start\">\n                        <input-date :datetime.sync=\"contract.startDate\" id=\"form-date\" class=\"uk-form-width-large\" ></input-date>\n                        <input type=\"hidden\" name=\"startDate\" :value=contract.startDate @blur=\"status(0);\">\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-cancellation\" class=\"uk-form-label\">\n                    {{ 'Cancellation' | trans }}\n                    <a href=\"#\" v-show=\"!editingCancellationdate\" class=\"pk-icon-edit pk-icon-hover\" :title=\"'Edit Cancellationdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusCancellationdate(1)\"></a>\n                    <a href=\"#\" :class=\"{'uk-hidden' : (!editingCancellationdate)}\" class=\"pk-icon-block pk-icon-hover\" :title=\"'Hide Cancellationdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusCancellationdate(0)\"></a>\n                </label>\n\n                <div class=\"uk-form-controls uk-form-controls-text\" v-show=\"!editingCancellationdate\">\n                    {{ cancellationDate ? $trans('%date%', { date: $date(cancellationDate) }) : '-' }}\n                </div>\n                <div class=\"uk-form-controls\" :class=\"{'uk-hidden' : (!editingCancellationdate)}\">\n                    <div class=\"uk-form-cancellation\">\n                        <input-date :datetime.sync=\"contract.cancellationDate\" id=\"form-date\" class=\"uk-form-width-large\" ></input-date>\n                    </div>\n                </div>\n            </div>\n\n\n        </div>\n\n    </div>\n\n";
+	module.exports = "\n\n    <div class=\"uk-grid\" data-uk-grid-margin>\n        <div class=\"uk-width-medium-2-3 uk-width-large-3-4\">\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-name\" class=\"uk-form-label\">{{ 'Name' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <input id=\"form-name\" class=\"uk-width-1-2\" type=\"text\" name=\"name\" v-model=\"contract.name\" v-validate:required >\n                    <a href=\"#\" v-show=\"editingName || form.name.invalid\" class=\"fa fa-refresh fa-2x uk-width-1-4\" :title=\"'Refresh random' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"getRandom('form-name', 'name', form.name)\"></a>\n                    <a href=\"#\" v-show=\"!editingName && !form.name.invalid\" class=\"fa fa-remove fa-2x uk-width-1-4\" :title=\"'Remove random' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"clearRandom('form-name', 'name', form.name)\"></a>\n\n                    <p class=\"uk-form-help-block uk-text-danger\" v-show=\"form.name.invalid\">{{ 'Name cannot be blank.' | trans }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-status\" class=\"uk-form-label\">{{ 'Status' | trans }}</label>\n                <select-option :contract.sync=\"contract\" :title=\"'Status'\" :id=\"'form-status'\" :status=\"false\" :name=\"'status'\" :options=\"data.statuses\" :value=\"contract.status_id\"></select-option>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-version\" class=\"uk-form-label\">{{ 'Version' | trans }}</label>\n                <select-option :contract.sync=\"contract\" :title=\"'Version'\" :id=\"'form-version'\" :status=\"false\" :name=\"'version'\" :options=\"data.versions\" :value=\"contract.version_id\"></select-option>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-participated\" class=\"uk-form-label\">{{ 'Contract period' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <select id=\"form-participated\" class=\"uk-width-1-2\" v-model=\"contract.contract_period\">\n                        <option v-for=\"(id, value) in data.contract_period\" :value=\"id\">{{id}}</option>\n                    </select>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-place\" class=\"uk-form-label\">{{ 'Place' | trans }}</label>\n                <div class=\"uk-form-controls\">\n                    <input id=\"form-place\" class=\"uk-form-width-large\" type=\"text\" name=\"place\" v-model=\"contract.place\" v-validate:required>\n                    <p class=\"uk-form-help-block uk-text-danger\" v-show=\"form.place.invalid\">{{ 'Place cannot be blank.' | trans }}</p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\" v-if='contract.date'>\n                <span class=\"uk-form-label\">{{ 'Date' | trans }}</span>\n                <div class=\"uk-form-controls uk-form-controls-text\">\n                    <p>{{ $trans('%date%', { date: contract.date ? $date(contract.date) : $trans('Never') }) }}</p>\n                </div>\n            </div>\n\n\n            <div class=\"uk-form-row\">\n                <span class=\"uk-form-label\">{{ 'Requirements' | trans }}</span>\n                <div class=\"uk-form-controls uk-form-controls-text\">\n                    <p v-for=\"requirement in data.requirements\" class=\"uk-form-controls-condensed\">\n                        <label><input type=\"checkbox\" :value=\"requirement.id\" v-model=\"contract.requirements\" number> {{ requirement.name }}</label>\n                    </p>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-start\" class=\"uk-form-label\">\n                    {{ 'Start' | trans }}\n                    <a href=\"#\" v-show=\"!editingStartdate\" class=\"pk-icon-edit pk-icon-hover\" :title=\"'Edit Startdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusStartdate(1)\"></a>\n                    <a href=\"#\" :class=\"{'uk-hidden' : (!editingStartdate)}\" class=\"pk-icon-block pk-icon-hover\" :title=\"'Hide Startdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click=\"statusStartdate(0)\"></a>\n                </label>\n\n                <div class=\"uk-form-controls uk-form-controls-text\" v-show=\"!editingStartdate\">\n                    {{ startDate ? $trans('%date%', { date: $date(startDate) }) : '-' }}\n                </div>\n                <div class=\"uk-form-controls\" :class=\"{'uk-hidden' : (!editingStartdate)}\">\n                    <div class=\"uk-form-start\">\n                        <input-date :datetime.sync=\"contract.startDate\" id=\"form-date\" class=\"uk-form-width-large\" ></input-date>\n                        <input type=\"hidden\" name=\"startDate\" :value=contract.startDate @blur=\"status(0);\">\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"uk-form-row\">\n                <label for=\"form-cancellation\" class=\"uk-form-label\">\n                    {{ 'Cancellation' | trans }}\n                    <a href=\"#\" v-show=\"!editingCancellationdate\" class=\"pk-icon-edit pk-icon-hover\" :title=\"'Edit Cancellationdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusCancellationdate(1)\"></a>\n                    <a href=\"#\" :class=\"{'uk-hidden' : (!editingCancellationdate)}\" class=\"pk-icon-block pk-icon-hover\" :title=\"'Hide Cancellationdate' | trans\" data-uk-tooltip=\"{delay: 500}\" @click.prevent=\"statusCancellationdate(0)\"></a>\n                </label>\n\n                <div class=\"uk-form-controls uk-form-controls-text\" v-show=\"!editingCancellationdate\">\n                    {{ cancellationDate ? $trans('%date%', { date: $date(cancellationDate) }) : '-' }}\n                </div>\n                <div class=\"uk-form-controls\" :class=\"{'uk-hidden' : (!editingCancellationdate)}\">\n                    <div class=\"uk-form-cancellation\">\n                        <input-date :datetime.sync=\"contract.cancellationDate\" id=\"form-date\" class=\"uk-form-width-large\" ></input-date>\n                    </div>\n                </div>\n            </div>\n\n\n        </div>\n\n    </div>\n\n";
 
 /***/ },
 /* 4 */
@@ -401,7 +406,7 @@
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
 	  if (!hotAPI.compatible) return
-	  var id = "/Users/dataclub/public_html/pagekit/packages/pagekit/pagekit-contract/app/components/select-option.vue"
+	  var id = "/home/dataclub/public_html/pagekit/packages/pagekit/pagekit-contract/app/components/select-option.vue"
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
@@ -428,7 +433,7 @@
 	//         </select>
 	//         <a href="#" class="fa fa-minus fa-2x uk-width-1-4" :title="'Remove value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="deleteOption(value)"></a>
 	//         <p class="uk-form-help-block uk-text-danger" v-show="!contract[name+'_id']">{{ $trans(name.capitalize() +' cannot be blank.') }}</p>
-
+	//
 	//     </div>
 	//     <div class="uk-form-controls uk-form-controls-text" v-show="!status">
 	//          <a href="#" class="fa fa-plus fa-2x uk-width-1-4" :title="'Add field' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="setField(1)"></a>
@@ -440,7 +445,7 @@
 	//         </div>
 	//     </div>
 	// </template>
-
+	//
 	// <script>
 
 	module.exports = {
@@ -511,8 +516,7 @@
 	};
 
 	// </script>
-
-	/* generated by vue-loader */
+	//
 
 /***/ },
 /* 6 */

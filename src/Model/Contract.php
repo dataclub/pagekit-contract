@@ -13,17 +13,11 @@ class Contract implements \JsonSerializable
 {
     use ContractModelTrait;
 
-    /**
-     *
-     * @var int
-     */
-    const NO = 0;
+    const three = 3;
+    const six = 6;
+    const twelve = 12;
+    const twenty_four = 24;
 
-    /**
-     *
-     * @var int
-     */
-    const YES = 1;
 
     /** @Column(type="integer") @Id */
     public $id;
@@ -53,9 +47,10 @@ class Contract implements \JsonSerializable
     public $user_id;
 
     /** @Column(type="integer") */
-    public $participated = Contract::NO;
-    /** @Column(type="integer") */
-    public $visitedMultiple = Contract::NO;
+    public $contract_period = Contract::twelve;
+
+    /** @Column(type="simple_array") */
+    public $requirements = [];
 
 
     /**

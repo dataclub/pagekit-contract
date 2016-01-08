@@ -33,8 +33,7 @@
     "Edit Cancellationdate" => "Kündigungsdatum bearbeiten",
     "Show" => "Anzeigen",
     "Hide" => "Verstecken",
-    "Participated?" => "Teilgenommen?",
-    "Visited multiple?" => "Mehrfach besucht?",
+    "Contract period" => "Vertragslaufzeit",
     "Yes" => "Ja",
     "No" => "Nein",
     "Activate status" => "Status aktivieren",
@@ -61,7 +60,11 @@
     "Add value" => "Wert hinzufügen",
     "Add field" => "Feld hinzufügen",
     "Remove value" => "Wert löschen",
+
     "It must be set one value at least." => "Es muss mindestens ein Wert vorhanden sein.",
+    "None selected" => "Nichts ausgewählt",
+    "Select all" => "Alle auswählen",
+    "Requirements" => "Voraussetzungen"
 );
 
 ?>

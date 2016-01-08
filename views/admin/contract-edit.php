@@ -1,6 +1,8 @@
 <?php $view->script('contract-edit', 'contract:app/bundle/contract-edit.js', ['vue', 'editor', 'uikit']) ?>
 <?php $view->style('contract-edit', 'contract:assets/css/font-awesome.min.css') ?>
+
 <?php $view->render('head') ?>
+
 
 <form id="contract-edit" class="uk-form uk-form-horizontal" v-validator="form" @submit.prevent="save | valid" v-cloak>
 

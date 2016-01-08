@@ -6,6 +6,7 @@ use Pagekit\Application as App;
 use Pagekit\Contract\Model\Contract;
 use Pagekit\Contract\Model\Status;
 use Pagekit\Contract\Model\Version;
+use Pagekit\Contract\Model\Requirement;
 /**
  * @Access(admin=true)
  */
@@ -63,8 +64,8 @@ class ContractController
                 'contract' => $contract,
                 'statuses' => Status::getStatuses(),
                 'versions' => Version::getVersions(),
-                'multipleVisits' => Contract::getMultipleVisits(),
-                'participations' => Contract::getParticipations(),
+                'requirements' => array_values(Requirement::findAll()),
+                'contract_period' => Contract::getContractPeriods(),
                 'config' => [],
             ],
         ];

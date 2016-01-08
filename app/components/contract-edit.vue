@@ -25,6 +25,15 @@
             </div>
 
             <div class="uk-form-row">
+                <label for="form-participated" class="uk-form-label">{{ 'Contract period' | trans }}</label>
+                <div class="uk-form-controls">
+                    <select id="form-participated" class="uk-width-1-2" v-model="contract.contract_period">
+                        <option v-for="(id, value) in data.contract_period" :value="id">{{id}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="uk-form-row">
                 <label for="form-place" class="uk-form-label">{{ 'Place' | trans }}</label>
                 <div class="uk-form-controls">
                     <input id="form-place" class="uk-form-width-large" type="text" name="place" v-model="contract.place" v-validate:required>
@@ -39,21 +48,13 @@
                 </div>
             </div>
 
-            <div class="uk-form-row">
-                <label for="form-participated" class="uk-form-label">{{ 'Participated?' | trans }}</label>
-                <div class="uk-form-controls">
-                    <select id="form-participated" class="uk-width-1-2" v-model="contract.participated">
-                        <option v-for="(id, participated) in data.participations" :value="id">{{participated}}</option>
-                    </select>
-                </div>
-            </div>
 
             <div class="uk-form-row">
-                <label for="form-visitedMultiple" class="uk-form-label">{{ 'Visited multiple?' | trans }}</label>
-                <div class="uk-form-controls">
-                    <select id="form-visitedMultiple" class="uk-width-1-2" v-model="contract.visitedMultiple">
-                        <option v-for="(id, visitedMultiple) in data.multipleVisits" :value="id">{{visitedMultiple}}</option>
-                    </select>
+                <span class="uk-form-label">{{ 'Requirements' | trans }}</span>
+                <div class="uk-form-controls uk-form-controls-text">
+                    <p v-for="requirement in data.requirements" class="uk-form-controls-condensed">
+                        <label><input type="checkbox" :value="requirement.id" v-model="contract.requirements" number> {{ requirement.name }}</label>
+                    </p>
                 </div>
             </div>
 
@@ -193,6 +194,11 @@
         },
 
         computed: {
+            isChecked: function(requirements, id){
+            console.log(123);
+                return requirements.indexOf(id) != -1;
+
+            },
             statusOptions: function () {
                 var options = _.map(this.data.statuses, function (name, id) {
                     return {text: name, value: id};
