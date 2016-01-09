@@ -35,13 +35,13 @@ trait AccountModelTrait
 
     public static function getStatuses()
     {
-        $contract_status = App::db()->createQueryBuilder()
-        ->from('@contract_status')
+        $contract_statuses = App::db()->createQueryBuilder()
+        ->from('@contract_statuses')
         ->execute('id, name')
         ->fetchAll();
 
         $statuses = [];
-        foreach($contract_status as $status){
+        foreach($contract_statuses as $status){
             $status = array_values($status);
             $statuses[$status[0]] = __($status[1]);;
         }

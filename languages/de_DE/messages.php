@@ -64,7 +64,26 @@
     "It must be set one value at least." => "Es muss mindestens ein Wert vorhanden sein.",
     "None selected" => "Nichts ausgewählt",
     "Select all" => "Alle auswählen",
-    "Requirements" => "Voraussetzungen"
+    "Requirements" => "Voraussetzungen",
+
+    /* Status */
+    "Customer" => "Kunde",
+    "Ex-Customer" => "Ehem. Kunde",
+    "Tester" => "Tester",
+    "Non-Customer" => "Nicht Kunde",
+
+    /* Requirements */
+    "Workshop" => "Workshop",
+    "E-Mail (Feedback)" => "E-Mail (Feedback)",
+    "Call -> sent back contract" => "Anruf -> Vertrag zugeschickt",
+    "Reminder 1 - Call -> Email" => "Reminder 1 - Anruf -> Email",
+    "Reminder 2 - Call -> Email" => "Reminder 2 - Anruf -> Email",
+    "Reminder 3 - Call -> Email" => "Reminder 3 - Anruf -> Email",
+
+    "The relation can not be deleted. It is already used in contracts." => "Die Relation kann nicht gelöscht werden. Es wird bereits in den Verträgen verwendet.",
+    "This value can´t be deleted." => "Dieser Wert kann nicht gelöscht werden.",
+
+
 );
 
 ?>

@@ -19,29 +19,18 @@ trait StatusModelTrait
 
     public static function getStatuses()
     {
-        $contract_status = App::db()->createQueryBuilder()
-        ->from('@contract_status')
-        ->execute('id, name')
-        ->fetchAll();
-
-        $statuses = [];
-        foreach($contract_status as $status){
-            $status = array_values($status);
-            $statuses[$status[0]] = __($status[1]);;
-        }
-
-        return $statuses;
+        return Status::query()->execute()->fetchAll();
     }
 
     /**
-     * Insert new added statuses to the contract_status-table
+     * Insert new added statuses to the contract_statuses-table
      * @param string $status
      */
     public static function setStatus($value){
         $statuses = self::getStatuses();
         if(!in_array($value, $statuses)){
-            if(App::db()->insert('@contract_status', ['name' => $value])){
-                return self::query()->select('id')->from('@contract_status')->where(['name' => $value])->limit(1)->first()->id;
+            if(App::db()->insert('@contract_statuses', ['name' => $value])){
+                return self::query()->select('id')->from('@contract_statuses')->where(['name' => $value])->limit(1)->first()->id;
             }
         }
 
@@ -49,7 +38,7 @@ trait StatusModelTrait
     }
 
     public static function getFirstStatus(){
-        $firstStatus = self::query()->select('id')->from('@contract_status')->limit(1)->first();
+        $firstStatus = self::query()->select('id')->from('@contract_statuses')->limit(1)->first();
 
         return $firstStatus == null ? null : $firstStatus->id;
     }

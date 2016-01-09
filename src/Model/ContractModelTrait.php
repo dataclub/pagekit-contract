@@ -67,4 +67,14 @@ trait ContractModelTrait
             );
         }
     }
+
+    public static function hasStatusRelation($statusID){
+        return self::query()->select('*')->join('@contract_statuses', 'status_id = @contract_statuses.id')->where(['status_id' => $statusID])->count() > 0;
+    }
+
+    public static function hasVersionRelation($versionID){
+        $a = self::query()->select('*')->join('@contract_versions', 'version_id = @contract_versions.id')->where(['version_id' => $versionID])->count();
+        return $a > 0;
+    }
+
 }

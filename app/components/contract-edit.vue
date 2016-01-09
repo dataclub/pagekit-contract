@@ -16,12 +16,12 @@
 
             <div class="uk-form-row">
                 <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
-                <select-option :contract.sync="contract" :title="'Status'" :id="'form-status'" :status="false" :name="'status'" :options="data.statuses" :value="contract.status_id"></select-option>
+                <select-option :data.sync="contract" :title="'Status'" :id="'form-status'" :status="false" :name="'status'" :options="data.statuses" :value="contract.status_id"></select-option>
             </div>
 
             <div class="uk-form-row">
                 <label for="form-version" class="uk-form-label">{{ 'Version' | trans }}</label>
-                <select-option :contract.sync="contract" :title="'Version'" :id="'form-version'" :status="false" :name="'version'" :options="data.versions" :value="contract.version_id"></select-option>
+                <select-option :data.sync="contract" :title="'Version'" :id="'form-version'" :status="false" :name="'version'" :options="data.versions" :value="contract.version_id"></select-option>
             </div>
 
             <div class="uk-form-row">
@@ -52,10 +52,9 @@
             <div class="uk-form-row">
                 <span class="uk-form-label">{{ 'Requirements' | trans }}</span>
                 <div class="uk-form-controls uk-form-controls-text">
-                    <p v-for="requirement in data.requirements" class="uk-form-controls-condensed">
-                        <label><input type="checkbox" :value="requirement.id" v-model="contract.requirements" number> {{ requirement.name }}</label>
-                    </p>
+                    <input-checkbox :data.sync="contract" :title="'Requirement'" :id="'requirement-status'" :status="false" :name="'requirement'" :options="data.requirements"></input-checkbox>
                 </div>
+
             </div>
 
             <div class="uk-form-row">
@@ -144,6 +143,7 @@
             String.prototype.capitalize = function() {
                 return this.charAt(0).toUpperCase() + this.slice(1);
             }
+
         },
         methods: {
             statusStartdate: function (value) {
@@ -194,11 +194,6 @@
         },
 
         computed: {
-            isChecked: function(requirements, id){
-            console.log(123);
-                return requirements.indexOf(id) != -1;
-
-            },
             statusOptions: function () {
                 var options = _.map(this.data.statuses, function (name, id) {
                     return {text: name, value: id};

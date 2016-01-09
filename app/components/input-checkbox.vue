@@ -1,12 +1,19 @@
 <template>
-    <div class="uk-form-controls">
-        <select :id="id" :name="name" class="uk-width-1-2" v-model="data[name+'_id']">
-                <option v-for="option in options" :value="option.id">{{option.name}}</option>
-        </select>
-        <a href="#" class="fa fa-minus fa-2x uk-width-1-4" :title="'Remove value' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="deleteOption(value)"></a>
-        <p class="uk-form-help-block uk-text-danger" v-show="!data[name+'_id']">{{ $trans(name.capitalize() +' cannot be blank.') }}</p>
+   <ul class="uk-sortable uk-nav uk-nav-side" data-uk-sortable="{dragCustomClass:'pk-sortable-dragged-list'}">
+       <li class="uk-visible-hover" v-for="requirement in options | orderBy 'priority'" :class="{'uk-active': current.id === role.id}">
+           <ul class="uk-subnav pk-subnav-icon uk-hidden" v-if="!requirement.locked">
+               <li><a class="pk-icon-edit pk-icon-hover" :title="'Edit' | trans" data-uk-tooltip="{delay: 500}" @click="edit(requirement)"></a></li>
+               <li><a class="pk-icon-delete pk-icon-hover" :title="'Delete' | trans" data-uk-tooltip="{delay: 500}" @click="remove(requirement)" v-confirm="'Delete Requirement?'"></a></li>
+           </ul>
 
-    </div>
+           <p class="uk-form-controls-condensed">
+               <input type="checkbox" :value="requirement.id" v-model="data.requirements" number>
+               <a @click.prevent="config.requirement = requirement.id">{{ requirement.name }}</a>
+           </p>
+
+       </li>
+   </ul>
+
     <div class="uk-form-controls uk-form-controls-text" v-show="!status">
          <a href="#" class="fa fa-plus fa-2x uk-width-1-4" :title="'Add field' | trans" data-uk-tooltip="{delay: 500}" @click.prevent="setField(1)"></a>
     </div>
@@ -22,22 +29,59 @@
 
     module.exports = {
 
-        props: ['title', 'value', 'options', 'id', 'name', 'status', 'data'],
+        props: ['title', 'options', 'id', 'name', 'status', 'data'],
 
         created: function () {
             if (this.value === undefined) {
                 this.value = '';
             }
 
+            this.resource = this.$resource('api/contract/:id');
+        },
+        ready: function(){
             String.prototype.capitalize = function() {
                 return this.charAt(0).toUpperCase() + this.slice(1);
             }
 
-            this.resource = this.$resource('api/contract/:id');
+            $(this.$el).on('change.uk.sortable', this.reorder);
         },
 
         computed: {},
         methods: {
+            edit: function (requirement) {
+                this.$set('requirement', $.extend({}, requirement || {}));
+                this.$refs.modal.open();
+            },
+
+            remove: function (requirement) {
+                if(!this.deleteRemovableOptions(value)){
+                    return;
+                }
+
+                this.resource.remove({ id: 'requirement'}, {id: requirement.id }, function (data) {
+                    this.data.requirements.splice(_.findIndex(this.data.requirements, { id: requirement.id }), 1);
+                    this.options.splice(_.findIndex(this.options, { id: requirement.id }), 1);
+
+                });
+            },
+
+            reorder: function (e, sortable) {
+
+                if (!sortable) {
+                    return;
+                }
+
+                sortable.element.children().each(function(i) {
+                    this.__vfrag__.scope.$set('requirement.priority', i);
+                });
+
+                this.resource.save({ id: 'requirement' }, { requirements: this.data.requirements }, function (data) {
+                    this.$notify('Requirements reordered.');
+                }, function (data) {
+                    this.$notify(data, 'danger');
+                });
+            },
+
             setField: function (value) {
                 this.status = value;
             },
@@ -53,7 +97,7 @@
 
                 this.resource.save({id: this.name}, data, function (data) {
                     if (!this.data.id) {
-                        window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.data.id}))
+                        window.history.replaceState({}, '', this.$url.route('admin/data/edit', {id: data.data.id}))
                     }
 
                     this.options = data.options;
@@ -78,7 +122,6 @@
                 data[this.name+'ID'] = value;
 
                 this.resource.delete({id: this.name}, data, function (data) {
-
                     this.options = data.options;
                     this.$set('data', data.data);
 

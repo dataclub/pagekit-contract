@@ -5,7 +5,7 @@ namespace Pagekit\Contract\Model;
 use Pagekit\Application as App;
 
 /**
- * @Entity(tableClass="@contract_status")
+ * @Entity(tableClass="@contract_statuses")
  */
 class Status implements \JsonSerializable
 {
@@ -16,6 +16,9 @@ class Status implements \JsonSerializable
 
     /** @Column(type="string") */
     public $name;
+
+    /** @Column(type="integer") */
+    public $priority;
 
     /** @var array */
     protected static $properties = [];

@@ -113,23 +113,23 @@ class Contract implements \JsonSerializable
     public function validate($data = null)
     {
         if (($data == null && empty($this->name)) || ($data != null && empty($data['name']))) {
-            return __('Name required.');
+            throw new Exception(__('Name required.'));
         }
 
         if (($data == null && empty($this->place)) || ($data != null && empty($data['place']))) {
-            return  __('Place required.');
+            throw new Exception(__('Place required.'));
         }
 
         if (($data == null && empty($this->date)) || ($data != null && empty($data['date']))) {
-            return __('Date required.');
+            throw new Exception(__('Date required.'));
         }
 
         if (($data == null && empty($this->status_id)) || ($data != null && empty($data['status_id']))) {
-            return __('Status required.');
+            throw new Exception(__('Status required.'));
         }
 
         if (($data == null && empty($this->version_id)) || ($data != null && empty($data['version_id']))) {
-            return __('Version required.');
+            throw new Exception(__('Version required.'));
         }
 
 

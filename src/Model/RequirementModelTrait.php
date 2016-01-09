@@ -12,7 +12,7 @@ trait RequirementModelTrait
     /**
      * @Saved
      */
-    public static function saved($event, Status $status)
+    public static function saved($event, Requirement $requirement)
     {
         $bla = "";
     }
@@ -34,11 +34,11 @@ trait RequirementModelTrait
     }
 
     /**
-     * Insert new added statuses to the contract_status-table
-     * @param string $status
+     * Insert new added requirements to the contract_requirements-table
+     * @param string $requirements
      */
     public static function setRequirement($value){
-        $requirements = self::getStatuses();
+        $requirements = self::getRequirements();
         if(!in_array($value, $requirements)){
             if(App::db()->insert('@contract_requirements', ['name' => $value])){
                 return self::query()->select('id')->from('@contract_requirements')->where(['name' => $value])->limit(1)->first()->id;

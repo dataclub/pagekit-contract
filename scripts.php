@@ -86,21 +86,34 @@ return [
             $util->createTable('@contract_versions', function ($table) {
                 $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
                 $table->addColumn('name', 'string', ['length' => 255]);
+                $table->addColumn('can_be_removed', 'boolean', ['default' => true]);
+                $table->addColumn('priority', 'integer', ['default' => 0]);
 
                 $table->setPrimaryKey(['id']);
             });
+
+            $db->insert('@contract_versions', ['id' => 1, 'name' => 'Agentur',  'can_be_removed' => 0, 'priority' => 0]);
+            $db->insert('@contract_versions', ['id' => 2, 'name' => 'Standard', 'can_be_removed' => 0, 'priority' => 1]);
+            $db->insert('@contract_versions', ['id' => 3, 'name' => 'Strato',   'can_be_removed' => 0, 'priority' => 2]);
         }
 
         /**
-         *  Contract_Status-Table
+         *  Contract_Statuses-Table
          */
-        if ($util->tableExists('@contract_status') === false) {
-            $util->createTable('@contract_status', function ($table) {
+        if ($util->tableExists('@contract_statuses') === false) {
+            $util->createTable('@contract_statuses', function ($table) {
                 $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
                 $table->addColumn('name', 'string', ['length' => 255]);
+                $table->addColumn('can_be_removed', 'boolean', ['default' => true]);
+                $table->addColumn('priority', 'integer', ['default' => 0]);
 
                 $table->setPrimaryKey(['id']);
             });
+
+            $db->insert('@contract_statuses', ['id' => 1, 'name' => 'Customer',     'can_be_removed' => 0, 'priority' => 0]);
+            $db->insert('@contract_statuses', ['id' => 2, 'name' => 'Ex-Customer',  'can_be_removed' => 0, 'priority' => 1]);
+            $db->insert('@contract_statuses', ['id' => 3, 'name' => 'Tester',       'can_be_removed' => 0, 'priority' => 2]);
+            $db->insert('@contract_statuses', ['id' => 4, 'name' => 'Non-Customer', 'can_be_removed' => 0, 'priority' => 3]);
         }
 
         /**
@@ -110,16 +123,18 @@ return [
             $util->createTable('@contract_requirements', function ($table) {
                 $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
                 $table->addColumn('name', 'string', ['length' => 255]);
+                $table->addColumn('can_be_removed', 'boolean', ['default' => true]);
+                $table->addColumn('priority', 'integer', ['default' => 0]);
 
                 $table->setPrimaryKey(['id']);
             });
 
-            $db->insert('@contract_requirements', ['id' => 1, 'name' => 'Workshop']);
-            $db->insert('@contract_requirements', ['id' => 2, 'name' => 'E-Mail (Feedback)']);
-            $db->insert('@contract_requirements', ['id' => 3, 'name' => 'Anruf -> Vertrag zugeschickt']);
-            $db->insert('@contract_requirements', ['id' => 4, 'name' => 'Reminder 1 - Anruf -> Email']);
-            $db->insert('@contract_requirements', ['id' => 5, 'name' => 'Reminder 2 - Anruf -> Email']);
-            $db->insert('@contract_requirements', ['id' => 6, 'name' => 'Reminder 3 - Anruf -> Email']);
+            $db->insert('@contract_requirements', ['id' => 1, 'name' => 'Workshop',                     'can_be_removed' => 0, 'priority' => 0]);
+            $db->insert('@contract_requirements', ['id' => 2, 'name' => 'E-Mail (Feedback)',            'can_be_removed' => 0, 'priority' => 1]);
+            $db->insert('@contract_requirements', ['id' => 3, 'name' => 'Call -> sent back contract',   'can_be_removed' => 0, 'priority' => 2]);
+            $db->insert('@contract_requirements', ['id' => 4, 'name' => 'Reminder 1 - Call -> Email',   'can_be_removed' => 0, 'priority' => 3]);
+            $db->insert('@contract_requirements', ['id' => 5, 'name' => 'Reminder 2 - Call -> Email',   'can_be_removed' => 0, 'priority' => 4]);
+            $db->insert('@contract_requirements', ['id' => 6, 'name' => 'Reminder 3 - Call -> Email',   'can_be_removed' => 0, 'priority' => 5]);
         }
 
         /**
@@ -164,8 +179,8 @@ return [
             $util->dropTable('@contract_companies');
         }
 
-        if ($util->tableExists('@contract_status')) {
-            $util->dropTable('@contract_status');
+        if ($util->tableExists('@contract_statuses')) {
+            $util->dropTable('@contract_statuses');
         }
 
         if ($util->tableExists('@contract_versions')) {

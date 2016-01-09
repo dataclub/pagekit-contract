@@ -4,6 +4,7 @@ namespace Pagekit\Contract\Controller;
 
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
+use Pagekit\Contract\Model\Requirement;
 use Pagekit\Contract\Model\Status;
 use Pagekit\Contract\Model\Version;
 use Pagekit\User\Model\User;
@@ -94,11 +95,10 @@ class ContractApiController
     }
 
     /**
-     * @Route("/", methods="POST")
-     * @Route("/{id}", methods="POST", requirements={"id"="\d+"})
-     * @Request({"contract": "array", "id": "int"}, csrf=true)
+     * @Route("/contract", methods="POST")
+     * @Request({"data": "array", "id": "int"}, csrf=true)
      */
-    public function saveAction($data, $id = 0)
+    public function saveContractAction($data, $id = 0)
     {
         try {
 
@@ -125,7 +125,7 @@ class ContractApiController
             }
 
             $validated = $contract->validate($data);
-            if($validated === true){
+            if($validated){
                 $contract->save($data);
                 return ['message' => 'success', 'contract' => $contract];
             }
@@ -138,23 +138,36 @@ class ContractApiController
         }
     }
 
+
+    /**
+     * @param $data Requirement
+     * @param int $id
+     * @return array
+     */
+    public function saveRequirementAction($data, $id = 0)
+    {
+        // is new ?
+        if (!$requirement = Requirement::find($id)) {
+
+            if ($id) {
+                App::abort(404, __('Requirement not found.'));
+            }
+
+            $requirement = Requirement::create();
+        }
+
+        $requirement->save($data);
+
+        return ['message' => 'success', 'requirement' => $requirement];
+    }
+
     /**
      * @Route("/status", methods="POST")
-     * @Request({"contract": "array", "id": "int", "status": "string"}, csrf=true)
+     * @Request({"data": "array", "id": "int", "status": "string"}, csrf=true)
      */
     public function statusSaveAction($data, $id = 0, $status = null)
     {
         try {
-            if (!$contract = Contract::find($id)) {
-                if ($id) {
-                    App::abort(404, __('Contract not found.'));
-                }
-            }
-
-            // user without universal access can only edit their own posts
-            if(!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
-                return ['error' => __('Access denied.')];
-            }
 
             if($status != null){
                 $statusID = Status::setStatus($status);
@@ -165,7 +178,7 @@ class ContractApiController
 
             return [
                 'message' => 'success',
-                'contract' => $data,
+                'data' => $data,
                 'options' => Status::getStatuses()
             ];
 
@@ -176,7 +189,7 @@ class ContractApiController
 
     /**
      * @Route("/version", methods="POST")
-     * @Request({"contract": "array", "id": "int", "version": "string"}, csrf=true)
+     * @Request({"data": "array", "id": "int", "version": "string"}, csrf=true)
      */
     public function versionSaveAction($data, $id = 0, $version = null)
     {
@@ -202,7 +215,7 @@ class ContractApiController
 
             return [
                 'message' => 'success',
-                'contract' => $data,
+                'data' => $data,
                 'options' => Version::getVersions()
             ];
 
@@ -250,7 +263,7 @@ class ContractApiController
 
     /**
      * @Route("/status", methods="DELETE")
-     * @Request({"contract": "array", "id": "int", "statusID": "string"}, csrf=true)
+     * @Request({"data": "array", "id": "int", "statusID": "string"}, csrf=true)
      */
     public function statusDeleteAction($data, $id = 0, $statusID = 0)
     {
@@ -265,25 +278,31 @@ class ContractApiController
             if (!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
                 return ['error' => __('Access denied.')];
             }
+
+            /** Existing contract with statusID */
+            if(Contract::hasStatusRelation($statusID)){
+                throw new Exception(__('The relation can not be deleted. It is already used in contracts.'));
+            }
+
+            if ($status = Status::find($statusID)) {
+                $status->delete();
+                $data['status_id'] = Status::getFirstStatus();
+            }
+
         }catch (Exception $e) {
             App::abort(400, $e->getMessage());
         }
 
-        if ($status = Status::find($statusID)) {
-            $status->delete();
-            $data['status_id'] = Status::getFirstStatus();
-        }
-
         return [
             'message' => 'success',
-            'contract' => $data,
+            'data' => $data,
             'options' => Status::getStatuses()
         ];
     }
 
     /**
      * @Route("/version", methods="DELETE")
-     * @Request({"contract": "array", "id": "int", "versionID": "string"}, csrf=true)
+     * @Request({"data": "array", "id": "int", "versionID": "string"}, csrf=true)
      */
     public function versionDeleteAction($data, $id = 0, $versionID = 0)
     {
@@ -298,47 +317,50 @@ class ContractApiController
             if (!App::user()->hasAccess('contract') && $contract->user_id !== App::user()->id) {
                 return ['error' => __('Access denied.')];
             }
+
+
+            /** Existing contract with versionID */
+            if(Contract::hasVersionRelation($versionID)){
+                throw new Exception(__('The relation can not be deleted. It is already used in contracts.'));
+            }
+
+            if ($version = Version::find($versionID)) {
+                $version->delete();
+                $data['version_id'] = Version::getFirstVersion();
+            }
         }catch (Exception $e) {
             App::abort(400, $e->getMessage());
         }
 
-        if ($version = Version::find($versionID)) {
-            $version->delete();
-            $data['version_id'] = Version::getFirstVersion();
-        }
-
         return [
             'message' => 'success',
-            'contract' => $data,
+            'data' => $data,
             'options' => Version::getVersions()
         ];
     }
 
     /**
-     * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
+     * @Route("/requirement", methods="DELETE")
      * @Request({"id": "int"}, csrf=true)
      */
-    public function deleteAction($id)
+    public function requirementDeleteAction($id)
     {
-        if (App::contract()->id == $id) {
-            App::abort(400, __('Unable to delete yourself.'));
-        }
 
-        if ($contract = Contract::find($id)) {
-            $contract->delete();
+        if ($requirement = Requirement::find($id)) {
+            $requirement->delete();
         }
 
         return ['message' => 'success'];
     }
 
     /**
-     * @Route("/bulk", methods="POST")
-     * @Request({"contracts": "array"}, csrf=true)
+     * @Route("/requirement", methods="POST")
+     * @Request({"requirements": "array"}, csrf=true)
      */
-    public function bulkSaveAction($contracts = [])
+    public function requirementSaveAction($requirements = [])
     {
-        foreach ($contracts as $data) {
-            $this->saveAction($data, null, isset($data['id']) ? $data['id'] : 0);
+        foreach ($requirements as $data) {
+            $this->saveRequirementAction($data, null, isset($data['id']) ? $data['id'] : 0);
         }
 
         return ['message' => 'success'];

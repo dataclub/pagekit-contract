@@ -17,6 +17,9 @@ class Version implements \JsonSerializable
     /** @Column(type="string") */
     public $name;
 
+    /** @Column(type="integer") */
+    public $priority;
+
     /** @var array */
     protected static $properties = [];
 

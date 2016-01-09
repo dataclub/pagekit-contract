@@ -18,7 +18,7 @@ class ContractController
      */
     public function indexAction($filter = null, $page = 0)
     {
-
+        $a = "";
         return [
             '$view' => [
                 'title' => __('Contracts'),
@@ -28,8 +28,8 @@ class ContractController
                 'statuses' => Status::getStatuses(),
                 'versions' => Version::getVersions(),
                 'authors'  => Contract::getAuthors(),
-                'multipleVisits' => Contract::getMultipleVisits(),
-                'participations' => Contract::getParticipations(),
+                'requirements' => array_values(Requirement::findAll()),
+                'contract_period' => Contract::getContractPeriods(),
                 'config' => [
                     'filter' => $filter,
                     'page' => $page

@@ -19,18 +19,7 @@ trait VersionModelTrait
 
     public static function getVersions()
     {
-        $contract_versions = App::db()->createQueryBuilder()
-        ->from('@contract_versions')
-        ->execute('id, name')
-        ->fetchAll();
-
-        $versions = [];
-        foreach($contract_versions as $version){
-            $version = array_values($version);
-            $versions[$version[0]] = __($version[1]);;
-        }
-
-        return $versions;
+        return Version::query()->execute()->fetchAll();
     }
 
     /**

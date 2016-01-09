@@ -37,16 +37,11 @@ window.Contract = {
     computed: {},
     methods: {
         save: function () {
-            var data = {contract: this.contract, id: this.contract.id};
+            var data = {data: this.contract, id: this.contract.id};
 
-            this.$broadcast('save', data);
+            this.$broadcast('saveContract', data);
 
-            this.resource.save({id: this.contract.id}, data, function (data) {
-                if(data.message == 'error'){
-                    this.$notify(this.$trans(data.content));
-                    return;
-                }
-
+            this.resource.save({id: 'contract'}, data, function (data) {
                 if (!this.contract.id) {
                     window.history.replaceState({}, '', this.$url.route('admin/contract/edit', {id: data.contract.id}))
                 }
@@ -73,6 +68,7 @@ window.Contract = {
 };
 
 Vue.component('select-option', require('../../components/select-option.vue'));
+Vue.component('input-checkbox', require('../../components/input-checkbox.vue'));
 Vue.ready(window.Contract);
 
 
